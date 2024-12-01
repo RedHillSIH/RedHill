@@ -31,10 +31,10 @@ router.post('/createUser', async (req, res) => {
         { expiresIn: '1h' }
     );
     res.cookie('token', token, {
+        maxAge: 1000 * 60 * 60,
         httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 3600000,
+        sameSite: "none",
+        secure: true
     });
     res.json({ message: 'Account Succesfully Created', user: { id: user._id, name: user.name, email: user.email , phone:user.phone } });
 
@@ -58,10 +58,10 @@ router.post('/login', async (req, res) => {
         { expiresIn: '1h' }
     );
     res.cookie('token', token, {
+        maxAge: 1000 * 60 * 60,
         httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 3600000,
+        sameSite: "none",
+        secure: true
     });
     res.json({ message: 'Login successful', user: { id: user._id, name: user.name, email: user.email , phone:user.phone } });
 });
