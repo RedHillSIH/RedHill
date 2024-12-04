@@ -7,9 +7,9 @@ dotenv.config()
 
 router.post('/createUser', async (req, res) => {
     const { name,password,phone,email } = req.body;
-    const user = await User.findOne({
+    let user = await User.findOne({
         $or: [
-            { phone:phone },
+            { phone: phone },
             { email: email }
         ]
     });
@@ -17,13 +17,19 @@ router.post('/createUser', async (req, res) => {
         return res.status(401).json({ message: 'user with same email or phone number or email id is already there ' });
     }
     let demo = new User({
-        email:email,
-        phone:phone,
+        email: email,
+        phone: phone,
         password: password,
-        name:name,
+        name: name,
         complaintTickets: []
     })
     await demo.save();
+    user = await User.findOne({
+        $or: [
+            { phone: phone },
+            { email: email }
+        ]
+    });
 
     const token = jwt.sign(
         { id: user._id, name: user.name, email: user.email , phone:user.phone },
