@@ -1,0 +1,35 @@
+version: "3.1"
+nlu:
+  - intent: medical_assistance
+    examples: |
+      - I need medical assistance
+      - Someone is injured
+      - Need a doctor onboard
+
+  - intent: security
+    examples: |
+      - There was a theft
+      - Someone is harassing passengers
+      - Unauthorized person in ladies' coach
+
+  - intent: divyangjan_facilities
+    examples: |
+      - Divyangjan coach is unavailable
+      - No braille signage in my coach
+      - Divyangjan toilet is not accessible
+
+  - intent: women_facilities
+    examples: |
+      - Need baby food
+      - Are there facilities for women with children?
+
+  - intent: electrical_equipment
+    examples: |
+      - The air conditioner is not working
+      - Charging points are broken
+      - Lights in the coach are flickering
+
+  - intent: miscellaneous
+    examples: |
+      - I have another complaint
+      - It's not listed here

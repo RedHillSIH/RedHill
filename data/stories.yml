@@ -1,0 +1,18 @@
+version: "3.1"
+stories:
+  - story: medical assistance story
+    steps:
+      - intent: medical_assistance
+      - action: utter_medical_assistance
+
+  - story: security story
+    steps:
+      - intent: security
+      - action: utter_security
+
+  - story: miscellaneous story
+    steps:
+      - intent: miscellaneous
+      - action: utter_miscellaneous
+
+  

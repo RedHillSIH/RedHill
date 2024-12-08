@@ -1,0 +1,41 @@
+version: "3.1"
+intents:
+  - medical_assistance
+  - security
+  - divyangjan_facilities
+  - women_facilities
+  - electrical_equipment
+  - coach_cleanliness
+  - punctuality
+  - water_availability
+  - coach_maintenance
+  - catering_services
+  - staff_behaviour
+  - corruption
+  - bed_roll
+  - miscellaneous
+
+responses:
+  utter_greet:
+    - text: "Welcome to RailMadad! How can I assist you today?"
+  utter_medical_assistance:
+    - text: "For medical assistance, I will notify the relevant authorities immediately."
+  utter_security:
+    - text: "Please specify the issue related to security, and we will take action."
+  utter_divyangjan_facilities:
+    - text: "Thank you for your feedback on Divyangjan facilities. We will address it promptly."
+  utter_women_facilities:
+    - text: "We take the needs of women with special requirements seriously. We'll handle this."
+  utter_miscellaneous:
+    - text: "For miscellaneous issues, please provide additional details."
+    
+
+
+actions:
+  - action_medical_assistance
+
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
