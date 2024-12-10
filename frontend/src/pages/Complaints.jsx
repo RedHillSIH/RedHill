@@ -13,7 +13,7 @@ function Complaints() {
           seat: "B2 26",
           issueType: "Blanket",
           severity: "High",
-          status: "Pending",
+          status: "Completed",
           date: "Sept 05, 2024",
         },
         {
@@ -21,7 +21,7 @@ function Complaints() {
           seat: "S7 60",
           issueType: "Cleanliness",
           severity: "High",
-          status: "Pending",
+          status: "Completed",
           date: "Sept 05, 2024",
         },
       ]);
@@ -38,7 +38,7 @@ function Complaints() {
     
       return (
         <>
-        <Navbar></Navbar>
+        <Navbar islogged={true}></Navbar>
         <div className="flex h-screen bg-gray-100">
           {/* Sidebar */}
           <Sidebar selected="Complaints" />

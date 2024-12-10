@@ -1,6 +1,21 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({islogged}) {
+
+    const handleLogOut = async () => {
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}logout`,{withCredentials:true});
+          if (res.data === "Unauthorised Request") {
+            islogged=false;
+            navigate("/");
+
+          } else {
+          }
+        } catch (error) {
+          console.error("Logout error:", error);
+        }
+      };
   return (
     <div className="min-h-10 items-center bg-white min-w-full p-3 md:flex md:justify-between bg-center">
     <div className='flex '>
@@ -19,11 +34,18 @@ function Navbar() {
    
         <p className='mt-2'>for security/medical assistance</p>
     </div>
-    <div>
-        <button className='bg-[#dcdef9] p-2 rounded hover:bg-[#75002b] hover:text-white  mx-2'>Log In</button>
-        <button className='bg-[#efe4e8] p-2 rounded hover:bg-[#75002b] hover:text-white  mx-2 '>Signup</button>
+   {islogged?( 
+     <div className="">
+     <button className='bg-red-800 p-2 rounded text-white hover:bg-[#75002b] hover:text-white  mx-2' onClick={handleLogOut()}>Log-Out</button>
+
+    </div>):(
+        <div>
+       <a href='/login'><button className='bg-[#dcdef9] p-2 rounded hover:bg-[#75002b] hover:text-white  mx-2'  >Log In</button></a> 
+       <a href='/register'><button className='bg-[#efe4e8] p-2 rounded hover:bg-[#75002b]  mx-2 '>Signup</button></a> 
 
     </div>
+       
+    )}
 </div>
   )
 }

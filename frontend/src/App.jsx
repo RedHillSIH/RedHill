@@ -2,7 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import About from "./pages/About";
 import Complaints from "./pages/Complaints";
-
+import Login from "./pages/Login";
+import dotenv from 'dotenv';
+import Register from "./pages/Register";
+// dotenv.config();
 
 function App() {
   return (
@@ -11,6 +14,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/complains" element={<Complaints />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+
 
 
       </Routes>
