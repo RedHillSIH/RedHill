@@ -7,7 +7,19 @@ const getIndianDateTime = () => {
     return { complaintDate, complaintTime };
 };
 
-const { complaintDate, complaintTime } = getIndianDateTime();
+import { exec } from 'child_process'
 
-console.log("Complaint Date:", complaintDate); // e.g., 2024-12-05
-console.log("Complaint Time:", complaintTime); // e.g., 15:34:21
+function extractMetadata(filePath) {
+    exec(`ffprobe -v quiet -print_format json -show_format -show_streams "${filePath}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.error(`Stderr: ${stderr}`);
+            return;
+        }
+        console.log(`Metadata: ${stdout}`);
+    });
+}
+extractMetadata("https://pbs.twimg.com/media/GeR4GDNWQAASUwg?format=jpg&name=large")
