@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import UserRoutes from './routes/user.routes.js';
+import ComplaintRoutes from './routes/user.routes.js';
 import { connectDB } from "./database.js";
 const app = express();
 
@@ -13,7 +14,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use('/', UserRoutes);
+app.use('/user', UserRoutes);
+app.use('/comp', ComplaintRoutes);
 
 
 
