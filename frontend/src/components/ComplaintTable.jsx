@@ -1,33 +1,37 @@
 import React from "react";
 
 const ComplaintTable = ({ complaints, onComplaintClick }) => {
+  // complaints[0].status="Completed";
+  
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border-collapse border border-gray-300 text-sm">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border border-gray-300 px-4 py-2 text-left">Ref No.</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Seat</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Issue Type</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Severity</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Status</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
+  
+    <div className="overflow-x-auto min-h-screen">
+      {/* {console.log(complaints)} */}
+      <table className="min-w-full bg-white rounded text-sm">
+      <thead className="hidden sm:table-header-group sm:bg-gray-200 rounded">
+      <tr>
+            <th className=" px-4 py-2 text-left">Ref No.</th>
+            <th className=" px-4 py-2 text-left">Seat</th>
+            <th className=" px-4 py-2 text-left">Issue Type</th>
+            <th className=" px-4 py-2 text-left">Severity</th>
+            <th className=" px-4 py-2 text-left">Status</th>
+            <th className=" px-4 py-2 text-left">Date</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-gray-100 ">
           {complaints.map((complaint) => (
             <tr
               key={complaint.id}
-              className="hover:bg-gray-100 cursor-pointer"
+              className="bg-white hover:bg-gray-50 cursor-pointer h-16 rounded  border-4 "
               onClick={() => onComplaintClick(complaint)}
             >
-              <td className="border border-gray-300 px-4 py-2">{complaint.id}</td>
-              <td className="border border-gray-300 px-4 py-2">{complaint.seat}</td>
-              <td className="border border-gray-300 px-4 py-2">{complaint.issueType}</td>
+              <td className=" px-4 py-2 text-blue-600 font-semibold ">{complaint.id}</td>
+              <td className=" px-4 py-2">{complaint.seat}</td>
+              <td className=" px-4 py-2">{complaint.issueType}</td>
              <td
-  className={`border border-gray-300 px-4 py-2 ${
+  className={` px-4 py-2 ${
     complaint.severity === "High"
-      ? "text-red-600 font-bold"
+      ? "text-red-600 font-semibold"
       : complaint.severity === "Medium"
       ? "text-yellow-500"
       : "text-green-600"
@@ -35,8 +39,15 @@ const ComplaintTable = ({ complaints, onComplaintClick }) => {
 >
   {complaint.severity}
 </td>
-              <td className="border border-gray-300 px-4 py-2">{complaint.status}</td>
-              <td className="border border-gray-300 px-4 py-2">{complaint.date}</td>
+              <td className={` px-4 py-2 ${
+    complaint.status === "Pending"
+      ? "text-red-600 font-semibold"
+      : complaint.status === "Completed"
+      ? "text-green-600"
+      :"text-yellow-500"
+      
+  }`}>•{complaint.status}</td>
+              <td className=" px-4 py-2">{complaint.date}</td>
             </tr>
           ))}
         </tbody>

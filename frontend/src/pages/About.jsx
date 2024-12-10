@@ -1,120 +1,71 @@
-import React from "react";
+import React, { useState } from 'react'
+import ComplaintModal from '../components/ComplaintModal';
+import ComplaintTable from '../components/ComplaintTable';
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
-function About() {
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-[#75002b] text-white">
-        <ul className="flex flex-col items-start space-y-6 p-6">
-          <li className="text-lg font-medium">TRAIN</li>
-          <li className="text-lg font-medium">STATION</li>
-          <li className="text-lg font-medium">APPRECIATION/RAIL ANUBHAV</li>
-          <li className="text-lg font-medium">ENQUIRY</li>
-          <li className="text-lg font-medium">TRACK YOUR CONCERN</li>
-          <li className="text-lg font-medium">SUGGESTIONS</li>
-        </ul>
-      </div>
 
-      {/* Form Section */}
-      <div className="flex-1 flex justify-center items-center p-6">
-        <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl">
-          <h1 className="text-2xl font-bold text-[#75002b] mb-4">Grievance Detail</h1>
-          <p className="text-sm text-right text-red-500">*Mandatory Fields</p>
-          <form className="grid grid-cols-2 gap-6">
-            {/* Mobile Number */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">Mobile No.</label>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  placeholder="Enter Mobile No."
-                  className="border p-2 rounded-md flex-1"
+function Complaints() {
+    // Complaints data is stored in the state
+    const [complaints] = useState([
+        {
+          id: "123456465129",
+          seat: "B2 26",
+          issueType: "Blanket",
+          severity: "High",
+          status: "Completed",
+          date: "Sept 05, 2024",
+        },
+        {
+          id: "123456465126",
+          seat: "S7 60",
+          issueType: "Cleanliness",
+          severity: "High",
+          status: "Pending",
+          date: "Sept 05, 2024",
+        },
+      ]);
+    
+      const [selectedComplaint, setSelectedComplaint] = useState(null);
+    
+      const handleComplaintClick = (complaint) => {
+        setSelectedComplaint(complaint);
+      };
+    
+      const handleCloseModal = () => {
+        setSelectedComplaint(null);
+      };
+    
+      return (
+        <>
+        <Navbar islogged={true}></Navbar>
+        <div className="flex min-h-screen bg-gray-100">
+          {/* Sidebar */}
+          <Sidebar selected="Complaints" />
+    
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col">
+            <header className="bg-white shadow p-4">
+              <h1 className="text-2xl font-bold">Complaints</h1>
+            </header>
+            <main className="flex-1 p-2 overflow-y-auto">
+              <ComplaintTable
+                complaints={complaints}
+                onComplaintClick={handleComplaintClick}
+              />
+              {/* {selectedComplaint && (
+                <ComplaintModal
+                  complaint={selectedComplaint}
+                  onClose={handleCloseModal}
                 />
-                <button className="bg-[#75002b] text-white px-4 py-2 rounded-md">Get OTP</button>
-              </div>
-            </div>
-
-            {/* Journey Details */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">PNR No *</label>
-              <input
-                type="text"
-                placeholder="Enter PNR No."
-                className="border p-2 rounded-md"
-              />
-            </div>
-
-            {/* Type */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">Type *</label>
-              <select className="border p-2 rounded-md">
-                <option>--Select--</option>
-                <option>Type 1</option>
-                <option>Type 2</option>
-              </select>
-            </div>
-
-            {/* Sub Type */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">Sub Type *</label>
-              <select className="border p-2 rounded-md">
-                <option>--Select--</option>
-                <option>Sub Type 1</option>
-                <option>Sub Type 2</option>
-              </select>
-            </div>
-
-            {/* Incident Date */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">Incident Date *</label>
-              <input type="datetime-local" className="border p-2 rounded-md" />
-            </div>
-
-            {/* Upload File */}
-            <div className="flex flex-col">
-              <label className="text-gray-700 font-medium">
-                Upload File (PDF, JPG, PNG, MP4 up to 5 MB)
-              </label>
-              <input
-                type="file"
-                className="border p-2 rounded-md"
-                accept=".pdf, .jpg, .jpeg, .png, .mp4"
-              />
-            </div>
-
-            {/* Grievance Description */}
-            <div className="col-span-2 flex flex-col">
-              <label className="text-gray-700 font-medium">Grievance Description *</label>
-              <textarea
-                className="border p-2 rounded-md"
-                rows="4"
-                placeholder="Enter your grievance details..."
-              ></textarea>
-              <p className="text-sm text-gray-500 mt-2">
-                {/* Note: Special characters {! @ # $ ^ ; & + = × ÷ * '} are not permitted */}
-              </p>
-            </div>
-
-            {/* Buttons */}
-            <div className="col-span-2 flex justify-end space-x-4">
-              <button
-                type="reset"
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
-              >
-                Reset
-              </button>
-              <button
-                type="submit"
-                className="bg-[#75002b] text-white px-4 py-2 rounded-md"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
+              )} */}
+             
+            </main>
+          </div>
         </div>
-      </div>
-    </div>
-  );
+        </>
+      );
+      
 }
 
-export default About;
+export default Complaints

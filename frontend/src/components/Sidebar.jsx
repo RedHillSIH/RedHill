@@ -4,7 +4,10 @@ const Sidebar = ({ selected }) => {
 
 
   return (
-    <aside className="bg-[#75002b] text-white w-64 h-full flex flex-col">
+    <div className="min-h-screen">
+
+    
+    <aside className="bg-[#75002b] text-white w-64 min-h-screen flex flex-col">
       
       <nav className="flex-1 p-4">
         <ul>
@@ -46,6 +49,7 @@ const Sidebar = ({ selected }) => {
         © 2024 Rail Madad
       </footer>
     </aside>
+    </div>
   );
 };
 

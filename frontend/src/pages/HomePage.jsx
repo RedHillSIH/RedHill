@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Navbar from '../components/Navbar';
 
 // loading gif - https://railmadad.indianrailways.gov.in/madad/final/images/RailMadad.gif
 // logo- https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png
@@ -7,6 +8,8 @@ import React, { useState } from 'react'
 
 function HomePage() {
     const [selectedOption, setSelectedOption] = useState("TRAIN");
+    const[islogged,setislogged]=useState(false);
+    const[complaints,setComplaints]=useState([]);
     const [formData, setFormData] = useState({
       mobileNo: "",
       otp: "",
@@ -27,6 +30,9 @@ function HomePage() {
         alert("Please enter a valid 10-digit mobile number.");
       }
     };
+
+
+    
   
     // Handle form inputs
     const handleInputChange = (e) => {
@@ -62,7 +68,7 @@ function HomePage() {
             <div className="shadow-md w-full h-full p-4 rounded-md min-h-fit">
               <h1 className="text-2xl font-bold text-[#75002b] mb-2">Grievance Detail</h1>
               <p className="text-sm text-right text-red-500">*Mandatory Fields</p>
-              <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+              <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit} >
                 {/* Mobile Number */}
                 <div className="flex flex-col">
                   <label className="text-gray-700 font-medium">Mobile No.</label>
@@ -187,6 +193,15 @@ function HomePage() {
               </form>
             </div>
           );
+          case "Complaints":
+          return (
+            <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl">
+              <h1 className="text-2xl font-bold text-[#75002b] mb-4">Complaints</h1>
+              <form>
+                <p className="text-gray-500">This is a blank form for now.</p>
+              </form>
+            </div>
+          );
         default:
           return null;
       }
@@ -196,7 +211,7 @@ function HomePage() {
 
   return (
     <div>
-        <div className="min-h-12 items-center bg-white min-w-full p-3 md:flex md:justify-between bg-center">
+        {/* <div className="min-h-12 items-center bg-white min-w-full p-3 md:flex md:justify-between bg-center">
             <div className='flex '>
                 <img className="h-12 mx-2 mt-2" src="https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png"></img>
                 <div >
@@ -218,7 +233,8 @@ function HomePage() {
                 <button className='bg-[#efe4e8] p-2 rounded hover:bg-[#75002b] hover:text-white  mx-2 '>Signup</button>
 
             </div>
-        </div>
+        </div> */}
+        <Navbar islogged={islogged}></Navbar>
         {/* body */}
         <div className="min-h-screen  grid " style={{
           backgroundImage: `url('https://railmadad.indianrailways.gov.in/madad/final/images/body-bg.jpg')`,
@@ -237,18 +253,28 @@ function HomePage() {
               >
                 TRAIN
               </li> 
-              <li
+              {/* <li
                 className={`border-b p-2 text-lg font-medium cursor-pointer ${
                   selectedOption === "STATION" ? "bg-[#75002b] underline" : ""
                 }`}
                 onClick={() => setSelectedOption("STATION")}
               >
                 STATION
-              </li>          
+              </li>      */}
+              <li
+                className={`border-b p-2 text-lg font-medium cursor-pointer ${
+                  selectedOption === "Complaints" ? "bg-[#75002b] underline" : ""
+                }`}
+                onClick={() => setSelectedOption("Complaints")}
+              >
+                Complaints
+              </li>     
                </ul>
             </div>
-            
+            <div className="h-fit">
             {renderContent()}
+            </div>
+            
                      </div>
         </div>
         <div className=" p-2 fixed-bottom bg-[#75002b] text-white text-1.5xl text-center">Copyright ©2019 RAILMADAD. All Rights Reserved.</div>
