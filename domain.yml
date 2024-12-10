@@ -1,9 +1,43 @@
 version: "3.1"
 intents:
+#Basics
+  - greet
+  - goodbye
+#Medical assistance
   - medical_assistance
-  - security
-  - divyangjan_facilities
-  - women_facilities
+#Security  
+  - eve_teasing
+  - theft
+  - unauthorized_person
+  - harassment_extortion
+  - nuisance_hawkers_beggar
+  - unclaimed_articles
+  - passenger_missing
+  - smoking_drinking
+  - dacoity_robbery
+  - quarrelling_hooliganism
+  - passenger_fallen
+  - nuisance_by_passenger
+  - misbehaviour
+  - others_security
+#Divyangjan Facilities
+  - divyangjan_coach_unavailability
+  - divyangjan_toilet_washbasin
+  - braille_signage_in_coach
+  - others_divyangjan_facilities
+#Women Facilities
+  - baby_food
+#Electrical Equipment
+#Coach-Cleanliness
+#Punctuality
+#Water Availability
+#Coach - Maintenance
+#Catering & Vending Services
+#Staff Behaviour
+#Corruption/ Bribery
+#Bed Roll
+#Miscellaneous
+
   - electrical_equipment
   - coach_cleanliness
   - punctuality
@@ -16,16 +50,77 @@ intents:
   - miscellaneous
 
 responses:
+#Basics
   utter_greet:
-    - text: "Welcome to RailMadad! How can I assist you today?"
+    - text: "Hello! How can I assist you today?"
+  
+  utter_goodbye:
+    - text: "Goodbye! Have a safe journey."
+
+#Medical assistance
   utter_medical_assistance:
-    - text: "For medical assistance, I will notify the relevant authorities immediately."
-  utter_security:
-    - text: "Please specify the issue related to security, and we will take action."
-  utter_divyangjan_facilities:
-    - text: "Thank you for your feedback on Divyangjan facilities. We will address it promptly."
-  utter_women_facilities:
-    - text: "We take the needs of women with special requirements seriously. We'll handle this."
+    - text: "We are here to assist you with medical help. Please describe the situation, and we will send immediate assistance."
+
+#Security 
+  utter_eve_teasing:
+    - text: "We take such matters very seriously. Please share the details, and we'll ensure proper action is taken."
+
+  utter_theft:
+    - text: "We are sorry to hear about the theft. Please provide the details of the incident so we can assist you better."
+
+  utter_unauthorized_person:
+    - text: "We will look into the presence of unauthorized persons in restricted areas. Please share more details so we can address this."
+
+  utter_harassment_extortion:
+    - text: "Harassment or extortion by any personnel is unacceptable. Please report the details, and we will take action against those involved."
+
+  utter_nuisance_hawkers_beggar:
+    - text: "Thank you for reporting the nuisance caused by hawkers or beggars. We will work to prevent such disturbances in the future."
+
+  utter_unclaimed_articles:
+    - text: "We understand the concern about unclaimed articles. Please provide further details, and we will ensure a swift resolution."
+
+  utter_passenger_missing:
+    - text: "We understand your worry about a missing passenger. Please provide any relevant details, and we will help in locating them."
+
+  utter_smoking_drinking:
+    - text: "We take smoking, drinking, and narcotic use seriously. Please share the details, and we'll ensure proper action is taken."
+
+  utter_dacoity_robbery:
+    - text: "This is a serious issue. Please provide details, and we will alert the authorities and ensure your safety."
+
+  utter_quarrelling_hooliganism:
+    - text: "We apologize for the disturbance caused. Please describe the situation, and we'll take appropriate action."
+
+  utter_passenger_fallen:
+    - text: "We are sorry to hear about the incident. Please let us know the location, and we will provide immediate assistance."
+
+  utter_nuisance_by_passenger:
+    - text: "We regret the disturbance caused by another passenger. Please provide details, and we'll ensure the matter is addressed."
+
+  utter_misbehaviour:
+    - text: "Misbehavior is unacceptable. Please share the specifics, and we will ensure appropriate action is taken."
+
+  utter_others_security:
+    - text: "Thank you for bringing this to our attention. Please describe the situation, and we will investigate it promptly."
+
+#Divyangjan Facilities
+  utter_divyangjan_coach_unavailability:
+    - text: "We understand that the Divyangjan coach is unavailable or not accessible. We apologize for the inconvenience. We will look into this issue and ensure better arrangements in the future."
+  
+  utter_divyangjan_toilet_washbasin:
+    - text: "We acknowledge the complaints regarding the condition and accessibility of the Divyangjan toilets and washbasins. We will ensure that these facilities are maintained properly and made more accessible."
+
+  utter_braille_signage_in_coach:
+    - text: "Thank you for bringing up the issue of Braille signage in the coach. We will work towards ensuring that proper Braille signage is installed across all compartments to improve accessibility for visually impaired passengers."
+
+  utter_others_divyangjan_facilities:
+    - text: "We apologize for the inconvenience regarding the other Divyangjan facilities. Your feedback is valuable, and we will make sure that our staff is better trained to handle and assist Divyangjan passengers, and that adequate provisions are made."
+
+#Women Facilities 
+  utter_baby_food:
+    - text: "We understand that baby food and related facilities are important during long journeys. We are looking into making baby food and milk available, as well as improving the necessary facilities on board."
+
   utter_miscellaneous:
     - text: "For miscellaneous issues, please provide additional details."
     

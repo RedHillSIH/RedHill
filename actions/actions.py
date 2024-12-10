@@ -30,13 +30,14 @@ from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 
-class ActionMedicalAssistance(Action):
+class ActionAcknowledgeComplaint(Action):
     def name(self) -> Text:
-        return "action_medical_assistance"
+        return "action_acknowledge_complaint"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="I have notified the medical team. Help is on its way.")
+        complaint_type = tracker.get_slot("complaint_type")
+        dispatcher.utter_message(text=f"Your complaint about {complaint_type} has been registered.")
         return []
 

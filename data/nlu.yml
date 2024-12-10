@@ -1,27 +1,678 @@
 version: "3.1"
 nlu:
+#Basics
+  - intent: greet
+    examples: |
+      - hello
+      - hi
+      - hey
+      - good morning
+      - good afternoon
+      - good evening
+      - hi there
+      - hello bot
+      - hey there
+      - what's up
+      - greetings
+
+  - intent: goodbye
+    examples: |
+      - bye
+      - goodbye
+      - see you later
+      - take care
+      - see you
+      - have a nice day
+      - talk to you later
+      - see you soon
+      - catch you later
+      - farewell
+      - bye bye
+
+
+#Medical Assistance
   - intent: medical_assistance
     examples: |
-      - I need medical assistance
-      - Someone is injured
-      - Need a doctor onboard
+      - I need a doctor immediately!
+      - Someone is feeling very sick, they need medical help.
+      - There's a person who's fainted on the train.
+      - I think someone is having a heart attack.
+      - There's a passenger bleeding from the head.
+      - Please call a doctor, a passenger is unwell.
+      - Someone fell down and is badly injured.
+      - I am feeling dizzy and nauseous, I need help.
+      - There is someone with severe chest pain, please assist.
+      - A person has collapsed and needs immediate medical attention.
+      - I have a headache, can someone help me?
+      - A fellow passenger is having an asthma attack.
+      - I am pregnant and feel very weak, can I get some help?
+      - My friend is having a seizure, we need a doctor now.
+      - I have nausea and vomiting, please send help.
+      - Someone has an allergic reaction, please assist.
+      - I am suffering from severe dehydration.
+      - There's a person with visible bruises, they need medical help.
+      - Someone fell off the train, please send emergency services.
+      - A person is not responding, I think they're unconscious.
+      - We need a first aid kit urgently.
+      - There's no doctor onboard, what should we do?
+      - Someone is struggling to breathe, please help.
+      - The train doesn't have a first aid kit or oxygen cylinder.
+      - Is there a doctor on the train? We have an emergency.
+      - We need help, a passenger is seriously injured.
+      - I need medical help for dehydration and exhaustion.
+      - I need a doctor immediately!
+      - Someone is feeling very sick, they need medical help.
+      - There's a person who's fainted on the train.
+      - I think someone is having a heart attack.
+      - There's a passenger bleeding from the head.
+      - Please call a doctor, a passenger is unwell.
+      - Someone fell down and is badly injured.
+      - I am feeling dizzy and nauseous, I need help.
+      - There is someone with severe chest pain, please assist.
+      - A person has collapsed and needs immediate medical attention.
+      - Muje headache ho raha hai, koi help kar sakta hai?
+      - A fellow passenger is having an asthma attack.
+      - Main pregnant hoon aur mujhe bahut weak feel ho raha hai, koi madad milegi?
+      - Mere friend ko seizure aa raha hai, doctor jaldi bhejo.
+      - Muje nausea aur vomiting ho rahi hai, madad bhejo.
+      - Someone has an allergic reaction, please assist.
+      - Main severe dehydration se suffer kar raha hoon.
+      - There's a person with visible bruises, they need medical help.
+      - Someone fell off the train, please send emergency services.
+      - A person is not responding, I think they're unconscious.
+      - We need a first aid kit urgently.
+      - Train mein koi doctor nahi hai, hum kya karein?
+      - Kisi ko saans lene mein problem ho rahi hai, madad karo.
+      - Train mein first aid kit ya oxygen cylinder nahi hai.
+      - Is train mein doctor hai? Humare paas emergency hai.
+      - Hum help chaahte hain, ek passenger seriously injured hai.
+      - Mujhe dehydration aur exhaustion ke liye medical help chahiye.
 
-  - intent: security
+#Security
+  - intent: eve_teasing
     examples: |
-      - There was a theft
-      - Someone is harassing passengers
-      - Unauthorized person in ladies' coach
+      - There is a man staring at me inappropriately.
+      - Muje lag raha hai ki ek aadmi mujhe follow kar raha hai.
+      - Someone is whistling at me, this is very uncomfortable.
+      - Yeh aadmi mere paas bahut close baitha hai, mujhe uncomfortable feel ho raha hai.
+      - Someone touched me inappropriately on the train.
+      - Mere raaste mein ek aadmi aa gaya hai aur ruk raha hai, main pass nahi kar pa rahi hoon.
+      - Please help, a man is harassing me on the train.
+      - There's a man trying to touch me inappropriately.
+      - I feel unsafe near this group of men in the ladies' coach.
+      - Ek aadmi mujhe poore safar bhar follow kar raha hai.
+      - I need immediate help, I was attacked by someone on the train.
+      - I was raped on the train, no one is responding to my calls.
+      - Train ke compartment mein light band hain, mujhe unsafe feel ho raha hai.
+      - Ek intoxicated aadmi ladies coach ke paas khada hai aur disturbance kar raha hai.
+      - I need a female security officer urgently.
+      - This man is blocking my way and won't let me pass.
+      - Muje ek aadmi follow kar raha hai, main help chahti hoon.
+      - The platform area is very poorly lit and I feel unsafe.
+      - Someone is making inappropriate comments to me, please help.
+      - Ek aadmi bahut close baitha hai aur mujhe uncomfortable feel ho raha hai.
+      - I am being harassed by a passenger, please assist.
+      - Ek group of men restroom ke paas khada hai aur mujhe uncomfortable feel ho raha hai.
+      - Muje lag raha hai ki main danger mein hoon, please help.
 
-  - intent: divyangjan_facilities
+  - intent: theft
     examples: |
-      - Divyangjan coach is unavailable
-      - No braille signage in my coach
-      - Divyangjan toilet is not accessible
+      - My wallet was stolen while I was sleeping.
+      - Kisi ne mera phone chura liya jab main door ke paas tha.
+      - Someone snatched my purse from my hand at the station.
+      - Mera bag kisi ne train mein chura liya hai.
+      - I think my jewelry is missing, I can't find it.
+      - My phone was pickpocketed while I was on the platform.
+      - Kisi ne mere saath chori ki jab main apne phone pe busy tha.
+      - Someone stole my laptop from the overhead rack.
+      - Mera bag tamper ho gaya tha, laga kisi ne lock khola hai.
+      - A stranger pretended to help me but stole my wallet.
+      - Mera mobile chura liya gaya hai, koi madad karo.
+      - Someone snatched my phone from my hand near the window.
+      - Main akela tha aur kisne mera wallet chura liya.
+      - Mere paas koi bahut zyada bheed thi aur mera purse gayab ho gaya.
+      - Mera luggage raaste mein chura liya gaya hai.
+      - Mera purse kisi ne apni taraf kheench liya.
+      - Ek aadmi ne help karne ka bahana banaya aur mera purse chura liya.
+      - Train mein itni bheed thi, kisi ne mera phone chura liya.
+      - Muje lagta hai ki mera phone train mein chura liya gaya hai.
+      - Ek elderly person ka purse train mein chura liya gaya hai.
+      - Please check the CCTV, someone stole my bag.
+      - Stations should have better checks, my phone got snatched.
+      - Please help, my wallet was taken while I was not looking.
 
-  - intent: women_facilities
+  - intent: unauthorized_person
     examples: |
-      - Need baby food
-      - Are there facilities for women with children?
+      - There are men in the women-only compartment.
+      - Women's compartment is overcrowded because of unauthorized people.
+      - A beggar is sleeping in the disabled coach, it's reserved for special passengers.
+      - Some people without tickets are sitting in the reserved sleeper coach.
+      - There are unauthorized passengers using the toilets in the reserved coach.
+      - Ek aadmi women's coach mein baitha hai, please action lo.
+      - The reserved coach is full of people without tickets.
+      - There's a group of men loitering in the ladies coach.
+      - Why are people without tickets allowed to enter the reserved coach?
+      - Kya sleeper coach mein check nahi hota? Unauthorized log baith rahe hain.
+      - There are beggars and hawkers in the disabled compartment.
+      - Main reserved coach mein travel kar raha hoon, aur koi unauthorized person baitha hai.
+      - There are people without reservation occupying the reserved seats.
+      - People are refusing to vacate the reserved seat even after repeated requests.
+      - I feel unsafe with unauthorized people in the ladies coach.
+      - The ladies coach is being misused by unauthorized passengers.
+      - Why is there no clear signage to prevent unauthorized entry in reserved compartments?
+      - A disabled coach is being occupied by people who don't need it.
+      - Why are people without tickets allowed in the reserved coach? This is unfair.
+      - The railway staff is not responding to the issue of unauthorized passengers.
+      - There's a man in the ladies coach and no one is taking action.
+      - Reserved compartments should be checked regularly to avoid misuse.
+      - Someone without a ticket is occupying my reserved seat.
+      - People are disturbing the passengers in the reserved coach.
+
+  - intent: harassment_extortion
+    examples: |
+      - A railway staff member asked me for a bribe to solve my issue.
+      - The security personnel threatened me with a fine for no reason.
+      - The ticket collector is demanding extra money for a service that is supposed to be free.
+      - I was verbally harassed by a security guard today.
+      - The railway staff is ignoring my complaint, I feel helpless.
+      - A railway officer is rude and not helping me at all.
+      - I was forced to pay extra money for a seat reservation that was already confirmed.
+      - The security guard was being aggressive and intimidating.
+      - The ticket collector asked for a bribe to let me go without a fine.
+      - Railway staff refused to help during an emergency situation.
+      - I was mistreated by a ticket collector when I asked for help.
+      - A railway security guard spoke rudely to me when I asked for directions.
+      - A railway officer demanded money for something that should be free.
+      - I was threatened by security personnel that they would call the police for no reason.
+      - A security guard pushed me when I asked about my complaint.
+      - The staff is misusing their authority, it's unacceptable.
+      - Railway personnel are harassing passengers for no reason.
+      - I was told I have to pay extra money for something that should be part of the service.
+      - The security staff was very aggressive and treated me unfairly.
+      - A railway officer insulted me when I asked for help.
+      - The ticket collector refused to acknowledge my valid complaint.
+      - The staff is extorting money from passengers for services they are supposed to provide.
+      - The security guard demanded money for assistance during an emergency.
+      - I feel threatened and unsafe due to the behavior of the railway staff.
+      - A railway staff member was intimidating me for no reason.
+      - There was no support from railway staff during an urgent situation, just threats.
+      - The railway security guard was very rude when I asked for assistance.
+
+  - intent: nuisance_hawkers_beggar
+    examples: |
+      - There is a hawker selling goods in the train and it's very noisy.
+      - A bhikhari is bothering passengers, asking for money all the time.
+      - Ek kinnar aaya aur har kisi se paise maang raha hai.
+      - I am feeling uncomfortable because a hawker is blocking the aisle with his goods.
+      - A bhikhari is disturbing everyone by continuously asking for money.
+      - Ek kinnar train mein loud clapping kar raha hai aur paise maang raha hai.
+      - A hawker is speaking loudly, disturbing everyone in the compartment.
+      - A bhikhari is following us around and not leaving us alone.
+      - Kinnar ko train ke entrance pe ruk ke paise maangte hue dekha.
+      - The hawker's goods are blocking the aisle and it's hard to move.
+      - Bhikhari ne humari seat ke paas aa kar paise maange, bahut uncomfortable ho gaya.
+      - A kinnar is creating a scene and refusing to leave unless we give money.
+      - There is a hawker disturbing everyone in the train, selling loudly.
+      - A bhikhari is begging non-stop and it's really bothering us.
+      - A kinnar is blocking the door and not letting anyone pass.
+      - I feel unsafe because a kinnar is demanding money aggressively.
+      - Bhikhari train mein ghoom rahe hain aur paise maang rahe hain.
+      - The hawker is disturbing us by selling loudly in the middle of the night.
+      - I can't rest because the bhikhari is constantly asking for money.
+      - Ek kinnar har kisi se paise maang raha hai, bahut disturbance ho raha hai.
+      - There's a bhikhari near our seat, disturbing our conversation.
+      - A hawker is pushing his way through the compartment with large bags.
+      - Kinnar baar-baar humare paas aa kar paise maang raha hai.
+      - A bhikhari is blocking the aisle and making it difficult to move around.
+      - I am disturbed because the hawker is selling things loudly near me.
+
+  - intent: unclaimed_articles
+    examples: |
+      - There is a bag left unattended near the door, it's making me uncomfortable.
+      - Koi luggage chhoda gaya hai, and no one is claiming it.
+      - I saw a suspicious bag on the seat with no one around.
+      - Someone left their bag in the compartment, and it's causing a lot of confusion.
+      - There is an unclaimed suitcase in the overhead rack.
+      - A bag was left behind by a passenger at the last station, it's still here.
+      - I think someone forgot their bag here, it's causing concern.
+      - Someone left their bag near the window, and it's making everyone nervous.
+      - There's an abandoned bag near the train door, can you check it?
+      - I saw an unattended backpack near the entrance, it could be dangerous.
+      - There's a suspicious-looking package left in the coach, please check.
+      - Koi bhi nahi aa raha, yeh bag kahan se aaya? It's been here for a while.
+      - There is luggage left on the train, and nobody seems to own it.
+      - Someone left a bag near the platform, can someone check it please?
+      - The unclaimed bag is disturbing the entire compartment, we need to address it.
+      - Koi apna saman yeh chhoda gaya hai, and it's making everyone uncomfortable.
+      - There's a backpack left under the seat, and I'm not sure if it's safe.
+      - A suspicious suitcase was left on the train, can we get help with this?
+      - There's an unclaimed trolley in the train compartment, it's causing trouble.
+      - Bag ka owner nahi dikh raha, it's been there since we left the last station.
+      - A bag is lying unclaimed near the entrance, please take action.
+      - There is an unattended bag and it's making everyone nervous.
+      - Someone left their suitcase on the floor, and it's causing confusion.
+      - I think this bag was left behind by a passenger who got off earlier.
+      - Yeh luggage kab ka hai? It's making people worried.
+
+  - intent: passenger_missing
+    examples: |
+      - One of the passengers is missing from their seat, I can't find them anywhere.
+      - Mera dost train mein nahi dikh raha, kahan gaya woh?
+      - I tried calling my family member, but they are not picking up the phone.
+      - Koi apna seat chhod ke chala gaya, he hasn't returned yet.
+      - I can't find the person traveling with me, he is missing.
+      - There's a passenger who got off at the wrong station and didn't return.
+      - My relative is not answering their phone, I'm getting worried.
+      - Kya aapne kisi ko dekha hai? Mera relative gayab ho gaya hai.
+      - The person I'm traveling with is not answering calls, I'm very concerned.
+      - I've lost contact with my friend, I'm not sure where they went.
+      - Mera friend train ke baad kahan gaya, I can't reach them on phone.
+      - Someone is missing, they haven't come back to their seat.
+      - I can't find my child, please help me, I am really scared.
+      - Mera relative abhi tak wapas nahi aaya, they were supposed to be at this station.
+      - I'm trying to call someone but they're not picking up, is everything alright?
+      - I lost contact with my family member, they were supposed to meet me here.
+      - My friend left suddenly, and I can't find them now.
+      - The person sitting next to me got off and didn't come back.
+      - I can't find the person traveling alone, they're not answering calls.
+      - Someone from our group is missing, we need help finding them.
+      - Koi train mein nahi dikh raha hai, phone pe bhi jawab nahi de raha hai.
+      - Mera family member missing ho gaya hai, kya aapne unhe dekha hai?
+      - I haven't been able to reach my family member, I'm worried they might be in trouble.
+      - Kya aapko koi passenger missing laga? Mere saath wale nahi dikh rahe.
+
+  - intent: smoking_drinking
+    examples: |
+      - Someone is smoking in the compartment, it's very uncomfortable.
+      - A passenger is drinking alcohol openly, this is not allowed.
+      - There's a strong smell of smoke in the train, please do something.
+      - Ek aadmi train ke andar cigarette pee raha hai.
+      - Someone is using drugs in the corner of the compartment.
+      - Koi passenger daaru pee raha hai aur badtameezi kar raha hai.
+      - I can smell alcohol in the coach, it's very disturbing.
+      - A passenger is intoxicated and creating a lot of noise.
+      - Train ke andar cigarette ka dhuaan ho raha hai, please stop them.
+      - There's a drunk passenger who is behaving very aggressively.
+      - Koi nasha kar raha hai train mein, please unhe rokiye.
+      - A passenger is drinking beer openly in the coach.
+      - A strong smell of cigarettes is making it difficult to breathe.
+      - Ek aadmi train mein daaru pee ke chillaa raha hai.
+      - Someone is smoking near the door, and the smoke is coming inside.
+      - There's a group of people consuming alcohol in the compartment.
+      - Koi nasha kiya hua lag raha hai aur sab ko pareshaan kar raha hai.
+      - A drunk passenger is harassing other passengers.
+      - Cigarette ka dhuaan coach mein fail raha hai, this is a problem for kids.
+      - I saw someone taking drugs in the restroom, please report this.
+      - Someone is openly smoking despite the rules.
+      - Train ke andar nasha karne ki wajah se environment kharaab ho gaya hai.
+      - A drunk person is shouting and disturbing everyone in the coach.
+      - Smoking is happening in non-designated areas; it's very harmful.
+      - I need assistance as someone is drinking alcohol in our coach.
+      - Cigarette ke dhuaan se train mein sabko dikkat ho rahi hai.
+      - Koi nasha kar raha hai aur halla macha raha hai, it's unsafe.
+
+  - intent: dacoity_robbery
+    examples: |
+      - Armed robbers have looted the train, please help!
+      - There was a dacoity in our compartment, everyone is terrified.
+      - Ek group ne train mein dacoity ki aur passengers se loot kiya.
+      - Someone was assaulted during a robbery; they need medical help.
+      - Our train was stopped by armed men who robbed everyone.
+      - Kuch log train mein hathiyar lekar passengers ko dhamka rahe the.
+      - A murder has occurred in the compartment; we need police immediately.
+      - Ek passenger ka murder ho gaya hai, please police ko inform kijiye.
+      - There are riots happening on the platform; it's unsafe to board the train.
+      - Platform par riots chal rahe hain, please kuch action lijiye.
+      - There was a violent fight in the coach, and someone got seriously injured.
+      - Train mein kuch log riots kar rahe hain aur passengers ko pareshaan kar rahe hain.
+      - Armed individuals entered the coach and looted all passengers.
+      - Our compartment has been attacked by robbers; it's chaos here.
+      - Kuch logon ne train mein daaru pee kar riots shuru kar diye hain.
+      - A group of men has caused a riot, damaging property and threatening people.
+      - There is no security; dacoits have looted the passengers in our coach.
+      - Train par hathiyar leke kuch log chad gaye aur sab loot liya.
+      - Riots broke out at the station, and people are fighting with weapons.
+      - Ek violent altercation ke baad ek passenger ki jaan chali gayi.
+      - Passengers are scared due to riots happening nearby.
+      - Looters have stolen everything, and no police or security is around.
+      - Riots ke wajah se platform par kaafi chaos hai.
+      - Someone has been killed in our compartment; this is serious.
+      - Train ke andar robbers ne passengers ko loot kar maar-pitai ki.
+      - The station is under chaos due to riots and fights breaking out.
+      - A fight has escalated into a murder; this is very dangerous.
+      - Dacoits boarded the train and took away everyone's belongings.
+      - Security nahi thi, aur robbers ne compartment ko loot liya.
+      - We are scared for our lives; armed men are threatening passengers.      
+
+  - intent: quarrelling_hooliganism
+    examples: |
+      - There is a loud fight happening in our compartment.
+      - Kuch log train mein zor-zor se chillate hue jhagda kar rahe hain.
+      - A group of passengers is arguing and using abusive language.
+      - Compartment mein ek group hooliganism kar raha hai.
+      - People are shouting and creating chaos in the coach.
+      - Train mein kuch log gaali-galauj kar rahe hain aur passengers ko pareshaan kar rahe hain.
+      - Passengers are fighting over seat allocation; it's disturbing everyone.
+      - Kuch passengers seats ke liye jhagda kar rahe hain aur shanti bigaad rahe hain.
+      - A group is vandalizing train property and behaving badly.
+      - Train mein kuch log seats aur saman ke upar ladaai kar rahe hain.
+      - There's a group singing loudly and disturbing everyone.
+      - Compartment mein ek group zor zor se gana gaakar pareshaan kar raha hai.
+      - Passengers are refusing to compromise over shared spaces.
+      - Train mein kuch log apas mein jhagda kar rahe hain aur shor macha rahe hain.
+      - People are fighting and making it unsafe for families and elderly passengers.
+      - A group of men is causing a mess and vandalizing the coach.
+      - Kuch log train ke andar tod-phod kar rahe hain aur passengers ko dar rahe hain.
+      - A noisy argument is disrupting the peace of the compartment.
+      - Coach mein chillane aur gaali dene ki wajah se journey uncomfortable ho gayi hai.
+      - There is hooliganism in the train making it unsafe for women.
+      - Coach ke andar kuch log halla macha rahe hain aur compartments ganda kar rahe hain.
+      - Passengers are quarreling loudly, and no staff is available to help.
+      - Train mein jhagda ki wajah se kaafi shor ho raha hai aur sab pareshaan hain.
+      - A group is making noise and refusing to settle down.
+      - Compartment mein kaafi halla-gulla aur jhagda ho raha hai.
+      - Families and elderly passengers are feeling uncomfortable due to the fight.
+      - People are vandalizing the train and throwing garbage everywhere.
+      - Train ke andar kuch log tod-phod aur gandagi karte hue dikhe gaye.
+
+  - intent: passenger_fallen
+    examples: |
+      - A passenger fell from the moving train.
+      - Ek passenger chalti train se gir gaya hai.
+      - Someone slipped while trying to get off the train.
+      - Train se girne ki wajah se ek passenger ko chot lagi hai.
+      - A person fell while boarding a crowded compartment.
+      - Ek vyakti train ke andar chadhte waqt balance kho baitha aur gir gaya.
+      - Someone fell due to overcrowding near the door.
+      - Train ke gate par bheed ke kaaran ek passenger gir gaya.
+      - A passenger slipped on the wet floor and fell.
+      - Ek passenger geela surface hone ke wajah se fisal gaya.
+      - Someone lost their balance and fell while alighting from the train.
+      - Ek passenger train se utarte samay gir gaya aur chot lag gayi.
+      - A person fell and is bleeding heavily.
+      - Train se girne ke baad ek passenger ko bahut zyada chot lagi hai.
+      - There was a sudden jerk, and a passenger fell down.
+      - Train ke andar ek achanak jhatke se ek passenger gir gaya.
+      - Emergency help is needed for a passenger who fell.
+      - Ek passenger jo gir gaya hai uske liye turant madad chahiye.
+      - Someone fell down and the train staff is not responding.
+      - Ek vyakti train se gir gaya aur staff help nahi kar raha.
+      - A passenger fell because the door was left open.
+      - Train ka darwaza khula hone ki wajah se ek passenger gir gaya.
+      - Someone fell while trying to board the train in motion.
+      - Chalti train par chadhte samay ek passenger gir gaya.
+      - Please send medical help for the person who fell.
+      - Jo passenger gir gaya hai uske liye medical madad bhejo.
+      - A child fell from the train while playing near the door.
+      - Ek bachcha darwaze ke paas khelte khelte train se gir gaya.
+
+  - intent: nuisance_by_passenger
+    examples: |
+      - A passenger is playing loud music without headphones.
+      - Ek passenger bina headphones ke tez awaaz mein music chala raha hai.
+      - Someone is talking very loudly and disturbing everyone.
+      - Ek vyakti bahut tez bol raha hai aur sabko pareshaan kar raha hai.
+      - A passenger is occupying extra space and not letting others sit.
+      - Ek passenger zyada jagah gher raha hai aur doosron ko baithne nahi de raha.
+      - Someone is littering the compartment with food wrappers.
+      - Ek vyakti khane ke wrappers compartment mein phenk raha hai.
+      - There's a person spilling food and making the area messy.
+      - Ek passenger khana gira raha hai aur compartment ganda kar raha hai.
+      - A person is arguing loudly with other passengers.
+      - Ek vyakti doosre passengers ke saath jhagda kar raha hai.
+      - Someone is drunk and creating a disturbance in the coach.
+      - Ek passenger sharab ke nasha mein hai aur shanti bhang kar raha hai.
+      - A fellow passenger is not cooperating with railway staff.
+      - Ek passenger railway staff ke saath cooperation nahi kar raha.
+      - Someone is refusing to follow travel rules and bothering others.
+      - Ek vyakti yatra ke niyam nahi maan raha aur sabko pareshan kar raha hai.
+      - A passenger is continuously shouting and making it hard to rest.
+      - Ek passenger lagataar chillaa raha hai aur aaraam karna mushkil kar raha hai.
+      - Someone is standing in the aisle, blocking the way for others.
+      - Ek vyakti passage mein khada hai aur doosron ka raasta rokh raha hai.
+      - There is a person who has made the compartment dirty.
+      - Ek passenger ne poora compartment ganda kar diya hai.
+      - A fellow passenger is behaving rudely with others.
+      - Ek passenger doosron ke saath badtameezi se baat kar raha hai.
+      - Someone is eating loudly and disturbing the peace.
+      - Ek vyakti tez awaaz mein khana kha raha hai aur sabko pareshaan kar raha hai.
+      - A person is playing games on their phone with loud sounds.
+      - Ek vyakti mobile par tez awaaz ke saath games khel raha hai.
+      - Passengers are throwing garbage out of the train.
+      - Kuch passengers train ke bahar kachra phenk rahe hain.
+
+  - intent: misbehavior
+    examples: |
+      - A passenger is speaking rudely to others.
+      - Ek passenger doosron se badtameezi se baat kar raha hai.
+      - Railway staff ignored my request for help.
+      - Railway staff ne meri madad ki guzarish ko nazarandaz kar diya.
+      - Someone made inappropriate remarks towards me.
+      - Ek vyakti ne mere liye ashleel tippani ki.
+      - A security guard spoke to me in a disrespectful tone.
+      - Ek security guard ne mujhse asammanjanak tareeke se baat ki.
+      - Passengers are refusing to share space on the seat.
+      - Kuch passengers seat par jagah share karne se mana kar rahe hain.
+      - Someone is behaving in a selfish manner and not considering others.
+      - Ek vyakti swaarthi tareeke se vyavhaar kar raha hai aur doosron ka dhyan nahi rakhta.
+      - Railway personnel made me feel uncomfortable with their behavior.
+      - Railway staff ke vyavhaar ki wajah se mujhe asuvidha mehsoos hui.
+      - A fellow passenger ignored my request to keep the volume low.
+      - Ek passenger ne volume kam karne ki meri guzarish ko nazarandaz kar diya.
+      - A person made a rude gesture at me.
+      - Ek vyakti ne mujhe badtameezi se ishara kiya.
+      - Railway staff refused to answer my queries politely.
+      - Railway staff mere sawaalon ka vinamrta se jawab dene se mana kar diya.
+      - Someone made unwelcome comments about my appearance.
+      - Ek vyakti ne mere vesh-bhushan par anchahe tippani ki.
+      - Passengers are refusing to maintain cleanliness in the compartment.
+      - Kuch passengers compartment ki safai ka dhyan nahi rakh rahe hain.
+      - A person refused to adjust luggage space for others.
+      - Ek vyakti luggage rakhne ke liye doosron ke liye adjust karne se inkaar kar raha hai.
+      - Railway staff treated me unprofessionally.
+      - Railway staff ne mujhse gair-peshawar tareeke se vyavhaar kiya.
+      - Someone is making sarcastic remarks and offending others.
+      - Ek vyakti vyangy tippaniyan kar raha hai aur doosron ko naraaz kar raha hai.
+      - Security personnel ignored my complaint.
+      - Security personnel ne meri shikayat ko nazarandaz kar diya.
+      - A passenger is purposely making me feel unwelcome.
+      - Ek passenger jaan-bujhkar mujhe asuvidha mehsoos karwa raha hai.
+
+  - intent: others_security
+    examples: |
+      - There is an unauthorized vehicle entering the railway premises.
+      - Ek anadhikrut gaadi railway ke premises mein dikh rahi hai.
+      - I saw a wild animal on the railway tracks.
+      - Maine railway tracks par ek jungli jaanwar dekha.
+      - A person is acting suspiciously near the train.
+      - Ek vyakti train ke paas sandigdh vyavhaar kar raha hai.
+      - There was a sudden power outage, and passengers are panicking.
+      - Achaanak se bijli chali gayi aur passengers ghabra rahe hain.
+      - I noticed a technical malfunction that could compromise security.
+      - Maine ek takneeki kharabi dekhi jo suraksha ko prabhavit kar sakti hai.
+      - Someone is carrying a large, unmarked bag that seems unusual.
+      - Koi ek bada aur bina chinha wale bag le kar ghoom raha hai, jo ajeeb lagta hai.
+      - There is smoke coming from an unknown source near the station.
+      - Station ke paas ek anjaane srot se dhuaan nikal raha hai.
+      - I noticed unauthorized people on the tracks.
+      - Maine railway tracks par anadhikrut logon ko dekha.
+      - The emergency alarm in the train is not functioning.
+      - Train mein emergency alarm kaam nahi kar raha hai.
+      - I observed someone tampering with railway equipment.
+      - Maine kisi ko railway ke upkaran ke saath chhed-chhaad karte dekha.
+      - The railway crossing gate is left open, causing danger.
+      - Railway crossing gate khula hua hai, jo suraksha ke liye khatra hai.
+      - A person seems to be taking pictures of the station without permission.
+      - Ek vyakti bina anumati ke station ki tasveerein le raha hai.
+      - Someone lit a fire near the train tracks.
+      - Kisi ne railway tracks ke paas aag lagai hai.
+      - There is a drone flying over the station without authorization.
+      - Station ke upar bina anumati ke ek drone ud raha hai.
+      - The platform lighting is not working, causing visibility issues.
+      - Platform ki roshni kaam nahi kar rahi hai, jo visibility ke liye samasya hai.
+      - I noticed someone leaving a suspicious package in the waiting area.
+      - Maine waiting area mein ek sandigdh package chhodte hue dekha.
+      - A technical fault in the signal system is causing confusion.
+      - Signal system mein ek takneeki kharabi hai jo uljhan paida kar rahi hai.
+      - The train doors are not closing properly, creating safety risks.
+      - Train ke darwaze theek se bandh nahi ho rahe hain, jo suraksha ke liye khatra hai.
+
+#Divyangjan Facilities
+  - intent: divyangjan_coach_unavailability
+    examples: |
+      - There is no Divyangjan coach attached to the train.
+      - Train mein Divyangjan coach nahi hai.
+      - The Divyangjan coach is overcrowded and inaccessible.
+      - Divyangjan coach overcrowded hai aur access karna mushkil hai.
+      - I am unable to find the coach for persons with disabilities.
+      - Main Divyangjan ke liye coach nahi dhoondh pa raha hoon.
+      - The Divyangjan coach is placed at the far end of the train.
+      - Divyangjan coach train ke bilkul end par rakha gaya hai.
+      - There are no ramps available at the station for wheelchair users.
+      - Station par wheelchair users ke liye ramps uplabdh nahi hain.
+      - Assistance for Divyangjan passengers is not provided.
+      - Divyangjan yatraiyon ke liye madad uplabdh nahi hai.
+      - I had to use the general compartment as the Divyangjan coach was missing.
+      - Mujhe general compartment ka use karna pada kyunki Divyangjan coach nahi tha.
+      - Unauthorized people are occupying the Divyangjan coach.
+      - Divyangjan coach mein anadhikrut log baithe hue hain.
+      - The signage indicating Divyangjan facilities is unclear.
+      - Divyangjan facilities ke liye lagaye gaye sign clear nahi hain.
+      - There was no announcement about the location of the Divyangjan coach.
+      - Divyangjan coach ke location ke baare mein koi announcement nahi hua.
+      - I faced difficulty boarding the train without proper facilities for persons with disabilities.
+      - Divyangjan ke liye uchit suvidhaon ke bina train mein chadne mein dikkat hui.
+      - The absence of assistance made it hard for me to alight at the station.
+      - Madad ki kami ke karan station par utarna mushkil tha.
+      - Wheelchair accessibility is poor in this train.
+      - Is train mein wheelchair ke liye accessibility achhi nahi hai.
+      - The ramp provided was too steep for safe use.
+      - Jo ramp diya gaya tha, woh use karne ke liye bahut steep tha.
+
+  - intent: divyangjan_toilet_washbasin
+    examples: |
+      - The Divyangjan toilet is very dirty and needs cleaning.
+      - Divyangjan toilet bahut ganda hai, safai ki zarurat hai.
+      - The washbasin is too high for wheelchair users to access.
+      - Washbasin wheelchair users ke liye bahut uncha hai, istemal karna mushkil hai.
+      - The toilet is leaking water.
+      - Toilet se paani leak ho raha hai.
+      - The washbasin is too low for comfortable use.
+      - Washbasin bahut neeche hai, aaram se istemal nahi ho sakta.
+      - The door to the Divyangjan toilet is very difficult to open.
+      - Divyangjan toilet ka darwaza kholna bahut mushkil hai.
+      - The lighting in the Divyangjan toilet is very poor.
+      - Divyangjan toilet mein roshni bahut kam hai.
+      - The toilet lock is not working properly.
+      - Toilet ka lock sahi se kaam nahi kar raha hai.
+      - There is no soap or handrails in the Divyangjan toilet.
+      - Divyangjan toilet mein soap ya handrails nahi hain.
+      - The Divyangjan toilet is in a very bad condition.
+      - Divyangjan toilet bahut kharaab condition mein hai.
+      - The washbasin in the Divyangjan toilet is not functional.
+      - Divyangjan toilet ka washbasin kaam nahi kar raha hai.
+      - The Divyangjan toilet needs regular maintenance and cleaning.
+      - Divyangjan toilet ko regular maintenance aur safai ki zarurat hai.
+      - The toilet is not accessible for elderly or disabled passengers.
+      - Toilet elderly ya disabled yatraiyon ke liye accessible nahi hai.
+      - The Divyangjan toilet is not user-friendly.
+      - Divyangjan toilet user-friendly nahi hai.
+      - The facilities in the Divyangjan toilet need to be redesigned.
+      - Divyangjan toilet ki suvidhaon ko redesign karna zaruri hai.
+      - I had difficulty using the toilet because it is not properly designed for Divyangjan passengers.
+      - Mujhe toilet ka istemal karne mein dikkat hui kyunki yeh Divyangjan yatraiyon ke liye sahi se design nahi kiya gaya hai.
+      - The water supply in the Divyangjan toilet is inconsistent.
+      - Divyangjan toilet mein paani ka supply inconsistent hai.
+
+  - intent: braille_signage_in_coach
+    examples: |
+      - There is no Braille signage in the train coach.
+      - Train coach mein Braille signage nahi hai.
+      - The Braille signs for seat numbers are missing.
+      - Seat numbers ke liye Braille signs nahi hai.
+      - The Braille labels on the doors are unreadable.
+      - Darwazon par Braille labels padna mushkil hai.
+      - There is no Braille signage for emergency instructions.
+      - Emergency instructions ke liye Braille signage nahi hai.
+      - The Braille signage is not clear or properly placed.
+      - Braille signage clear nahi hai ya sahi jagah par nahi hai.
+      - There are no Braille signs for washrooms or exits.
+      - Washroom ya exits ke liye koi Braille signs nahi hain.
+      - I couldn't find the Braille signage to locate my seat.
+      - Apni seat dhundhne ke liye Braille signage nahi mil paayi.
+      - The lack of Braille signage makes it difficult for visually impaired passengers.
+      - Braille signage ki kami se andhe yatraiyon ko kathinai hoti hai.
+      - There should be Braille signs for all important locations in the coach.
+      - Coach mein sabhi mahatvapurn jagah ke liye Braille signs hone chahiye.
+      - The coach does not have audio announcements for visually impaired passengers.
+      - Coach mein andhe yatraiyon ke liye audio announcements nahi hai.
+      - The absence of tactile indicators makes it hard to navigate.
+      - Tactile indicators ki kami se safar karna mushkil hota hai.
+      - Braille signage in the train needs to be more consistent and readable.
+      - Train mein Braille signage ko zyada consistent aur padhne layak hona chahiye.
+      - I suggest adding Braille signage at all the doors and emergency exits.
+      - Mein sujhav deta hoon ki sabhi darwazon aur emergency exits par Braille signage lagaya jaye.
+
+  - intent: others_divyangjan_facilities
+    examples: |
+      - There are no trained staff to assist Divyangjan individuals.
+      - Divyangjan yatraiyon ki madad ke liye koi trained staff nahi hai.
+      - The wheelchair storage space is not available in the train.
+      - Train mein wheelchair storage space nahi hai.
+      - The mobility aids are not handled properly.
+      - Mobility aids ko sahi tarike se handle nahi kiya jata hai.
+      - There is no staff to help Divyangjan passengers with boarding or alighting.
+      - Divyangjan passengers ko board ya alight karne mein madad karne wala staff nahi hai.
+      - The staff doesn't seem to understand the needs of Divyangjan individuals.
+      - Staff ko Divyangjan yatraiyon ki zarurat samajh nahi aati hai.
+      - There is no policy in place to ensure smooth travel for Divyangjan passengers.
+      - Divyangjan yatraiyon ke liye suvidha janak safar sunischit karne ke liye koi policy nahi hai.
+      - The station doesn't have enough facilities for Divyangjan passengers.
+      - Station mein Divyangjan yatraiyon ke liye paryapt suvidhaayein nahi hain.
+      - There are no ramps or elevators for Divyangjan passengers at the station.
+      - Station mein Divyangjan yatraiyon ke liye ramps ya elevators nahi hain.
+      - The train doesn't have sufficient space to accommodate mobility aids.
+      - Train mein mobility aids ke liye paryapt jagah nahi hai.
+      - I had difficulty accessing Divyangjan facilities at the station.
+      - Mujhe station par Divyangjan suvidhaayein istemal karne mein kathinai hui.
+      - There is no dedicated staff to help with special needs on the train.
+      - Train mein special needs wale yatraiyon ki madad ke liye koi dedicated staff nahi hai.
+      - The lack of awareness among staff regarding Divyangjan needs is a problem.
+      - Staff mein Divyangjan ki zaruraton ke prati jagrookta ki kami ek samasya hai.
+      - There is no assistance for Divyangjan passengers during emergency situations.
+      - Emergency situations mein Divyangjan yatraiyon ko koi madad nahi milti hai.
+      - There is no clear protocol for handling disabled passengers during their journey.
+      - Yatra ke dauran disabled yatraiyon ko handle karne ke liye koi clear protocol nahi hai.                  
+
+#Women Facilities
+  - intent: baby_food
+    examples: |
+      - There is no baby food available on the train.
+      - Train mein baby food available nahi hai.
+      - Mothers are facing difficulty feeding their children due to no facilities.
+      - Maaon ko apne bachon ko khana dene mein mushkil ho rahi hai kyunki koi suvidha nahi hai.
+      - There is no hot water dispenser to prepare baby food.
+      - Baby food banane ke liye koi hot water dispenser nahi hai.
+      - There are no baby feeding chairs on the train.
+      - Train mein baby feeding chairs nahi hain.
+      - No staff is available to help mothers with feeding their children.
+      - Koi staff maaon ki madad karne ke liye available nahi hai.
+      - I couldn't find baby food at the station either.
+      - Station par bhi baby food nahi mila.
+      - The catering service doesn't provide any baby food options.
+      - Catering service mein koi baby food options nahi hain.
+      - There should be a dedicated compartment for mothers with babies.
+      - Maaon ke liye dedicated compartment hona chahiye.
+      - I couldn't get milk or baby food for my child during the journey.
+      - Yatra ke dauran apne bachhe ke liye doodh ya baby food nahi mil paya.
+      - There should be a kiosk on the train selling baby food and necessities.
+      - Train par ek kiosk hona chahiye jo baby food aur zaroorat ki cheezein beche.
+      - The train should have better facilities for mothers traveling with infants.
+      - Train mein maaon ke liye behtar suvidhaayein honi chahiye jo infants ke saath safar kar rahi hain.
+      - No one helped with preparing baby food during the journey.
+      - Yatra ke dauran baby food banane mein koi madad nahi mili.
+      - The lack of baby food made my journey difficult.
+      - Baby food ki kami ne meri yatra ko mushkil banadiya.
 
   - intent: electrical_equipment
     examples: |

@@ -1,0 +1,25 @@
+# Virtual Environment
+venv/
+.env
+
+# Model files
+models/
+*.tar.gz
+
+# Logs and temporary files
+logs/
+*.log
+__pycache__/
+*.pyc
+
+# Rasa data cache
+*.db
+*.sqlite
+.rasa/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Configuration secrets
+credentials.yml

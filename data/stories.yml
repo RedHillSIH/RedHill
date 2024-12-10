@@ -1,14 +1,82 @@
 version: "3.1"
+
+
 stories:
-  - story: medical assistance story
+  - story: Handle basic greetings and goodbyes
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: Handle medical assistance request
     steps:
       - intent: medical_assistance
       - action: utter_medical_assistance
 
-  - story: security story
+  - story: Handle security-related complaints
     steps:
-      - intent: security
-      - action: utter_security
+      - intent: eve_teasing
+      - action: utter_eve_teasing
+
+      - intent: theft
+      - action: utter_theft
+
+      - intent: unauthorized_person
+      - action: utter_unauthorized_person
+
+      - intent: harassment_extortion
+      - action: utter_harassment_extortion
+
+      - intent: nuisance_hawkers_beggar
+      - action: utter_nuisance_hawkers_beggar
+
+      - intent: unclaimed_articles
+      - action: utter_unclaimed_articles
+
+      - intent: passenger_missing
+      - action: utter_passenger_missing
+
+      - intent: smoking_drinking
+      - action: utter_smoking_drinking
+
+      - intent: dacoity_robbery
+      - action: utter_dacoity_robbery
+
+      - intent: quarrelling_hooliganism
+      - action: utter_quarrelling_hooliganism
+
+      - intent: passenger_fallen
+      - action: utter_passenger_fallen
+
+      - intent: nuisance_by_passenger
+      - action: utter_nuisance_by_passenger
+
+      - intent: misbehaviour
+      - action: utter_misbehaviour
+
+      - intent: others_security
+      - action: utter_others_security
+
+  - story: Handle Divyangjan Complaints
+    steps:
+      - intent: divyangjan_coach_unavailability
+      - action: utter_divyangjan_coach_unavailability
+      
+      - intent: divyangjan_toilet_washbasin
+      - action: utter_divyangjan_toilet_washbasin
+      
+      - intent: braille_signage_in_coach
+      - action: utter_braille_signage_in_coach
+      
+      - intent: others_divyangjan_facilities
+      - action: utter_others_divyangjan_facilities
+
+  - story: Handle Women Facilities Complaints
+    steps:
+      - intent: baby_food
+      - action: utter_baby_food
 
   - story: miscellaneous story
     steps:
