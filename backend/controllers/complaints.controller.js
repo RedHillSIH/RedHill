@@ -18,7 +18,11 @@ export const createComplaint= async (req, res) => {
     //   // incidentDate: "",
     //   file:[],
     //   grievanceDescription: "",
-    const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
+    // const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
+    const PNR=req.body.pnrNo
+    const Phone=req.body.mobileNo
+    const complaintMedia=req.body.files
+    const complaintDesc=req.body.grievanceDescription
     console.log(req.body);
     const loggedin=req.loggedin
     let user;
