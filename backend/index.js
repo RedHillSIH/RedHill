@@ -10,7 +10,7 @@ const app = express();
 
 dotenv.config();
 app.use(cors({
-    origin: 'http://localhost:3000', // Adjust for your frontend
+    origin: 'http://localhost:5173', // Adjust for your frontend
     credentials: true // Allow credentials (cookies)
 }));
 app.use(cookieParser());

@@ -12,7 +12,14 @@ export const createComplaint= async (req, res) => {
     // putData()
     // return res.status(200)
     // return
-    const {PNR,Phone,complaintMedia,complaintDesc}=req.body
+    // mobileNo: "",
+    //   otp: "",
+    //   pnrNo: "",
+    //   // incidentDate: "",
+    //   file:[],
+    //   grievanceDescription: "",
+    const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
+    console.log(req.body);
     const loggedin=req.loggedin
     let user;
     if(loggedin){

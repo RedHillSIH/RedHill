@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
+import axios from "axios"
 
 // loading gif - https://railmadad.indianrailways.gov.in/madad/final/images/RailMadad.gif
 // logo- https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png
@@ -14,11 +15,67 @@ function HomePage() {
       mobileNo: "",
       otp: "",
       pnrNo: "",
-      incidentDate: "",
-      file: null,
+      // incidentDate: "",
+      file:[],
       grievanceDescription: "",
     });
     const [otpGenerated, setOtpGenerated] = useState("");
+
+    // if(islogged===true){
+
+    // }
+
+
+    const convert = async (data) => {
+      const op = []; // Use an array to store the uploaded file links
+      for (const file of data.file) { // Use 'const' in the for...of loop
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', import.meta.env.VITE_APP_UPLOAD_PRESET);
+  
+          try {
+              const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_APP_CLOUD_NAME}/auto/upload`, {
+                  method: 'POST',
+                  body: formData,
+              });
+  
+              const responseData = await response.json();
+  
+              if (response.ok) {
+                  // Add the uploaded image's URL to the output array
+                  op.push(responseData.secure_url);
+              } else {
+                  console.error(`Error uploading file: ${responseData.error.message}`);
+              }
+          } catch (error) {
+              console.error(`Network error: ${error.message}`);
+          }
+      }
+      return op; // Return the array of uploaded file links
+  };
+  
+
+
+    useEffect(() => {
+      //setLoad(true);
+      const getUser = async () => {
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}user/get`, { withCredentials: true });
+          if (res.data.loggedin === false) {
+            // navigate("/");
+            setislogged(false)
+          } else {
+            // setLoad(false);
+            
+            setislogged(true);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUser();
+     // console.log(user,profilePicture)
+    }, []);
   
     // Dummy OTP Generator
     const handleGetOtp = () => {
@@ -37,76 +94,100 @@ function HomePage() {
     // Handle form inputs
     const handleInputChange = (e) => {
       const { name, value, type, files } = e.target;
+    
       setFormData((prevData) => ({
         ...prevData,
-        [name]: type === "file" ? files[0] : value,
+        [name]: type === "file" ? [...files] : value, // Handle multiple files as an array
       }));
     };
+    
   
     // Handle form submission
-    const handleSubmit = (e) => {
-      e.preventDefault();
+    // const handleSubmit = (e) => {
+    //   e.preventDefault();
+    //   if (formData.otp !== otpGenerated) {
+    //     alert("Invalid OTP. Please try again.");
+    //     return;
+    //   }
+    //   const jsonData = {
+    //     mobileNo: formData.mobileNo,
+    //     pnrNo: formData.pnrNo,
+    //     // incidentDate: formData.incidentDate,
+    //     fileName: formData.file ? formData.file.name : null,
+    //     grievanceDescription: formData.grievanceDescription,
+    //   };
+    //   console.log("Form Data to be sent to backend:", jsonData);
+    //   alert("Form submitted successfully!");
+    // };
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Prevent the default form submission
+    
       if (formData.otp !== otpGenerated) {
         alert("Invalid OTP. Please try again.");
         return;
       }
-      const jsonData = {
-        mobileNo: formData.mobileNo,
-        pnrNo: formData.pnrNo,
-        incidentDate: formData.incidentDate,
-        fileName: formData.file ? formData.file.name : null,
-        grievanceDescription: formData.grievanceDescription,
-      };
-      console.log("Form Data to be sent to backend:", jsonData);
-      alert("Form submitted successfully!");
+    
+      try {
+        const uploadedFiles = await convert(formData); // Ensure file conversion is processed
+        // console.log("Uploaded files:", uploadedFiles);
+      
+        setFormData((prevData) => ({
+          ...prevData,
+          files: uploadedFiles,
+        }));
+        // console.log(formData)
+        await axios
+        .post(`${import.meta.env.VITE_API_URL}comp/create`,formData, { withCredentials: true })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data) {
+             alert('Complaint Registered');
+            // navigate('/');
+          }
+        })
+        // Add logic to send `formData` to the backend or perform necessary actions
+      } catch (error) {
+        console.error("Error during form submission:", error.message);
+      }
     };
+    
   
     const renderContent = () => {
       switch (selectedOption) {
         case "TRAIN":
           return (
-            <div className="shadow-md w-full h-full p-4 rounded-md min-h-fit">
-              <h1 className="text-2xl font-bold text-[#75002b] mb-2">Grievance Detail</h1>
+            <div className="shadow-md w-full  p-4 rounded-md ">
+              <h1 className="text-2xl font-bold text-[#75002b] mt-2 mb-2">Grievance Detail</h1>
               <p className="text-sm text-right text-red-500">*Mandatory Fields</p>
-              <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit} >
-                {/* Mobile Number */}
-                <div className="flex flex-col">
-                  <label className="text-gray-700 font-medium">Mobile No.</label>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      name="mobileNo"
-                      placeholder="Enter Mobile No."
-                      className="border p-2 rounded-md flex-1"
-                      value={formData.mobileNo}
-                      onChange={handleInputChange}
-                    />
-                    <button
-                      type="button"
-                      className="bg-[#75002b] text-white px-4 py-2 rounded-md"
-                      onClick={handleGetOtp}
-                    >
-                      Get OTP
-                    </button>
-                  </div>
-                </div>
-  
-                {/* OTP */}
-                <div className="flex flex-col">
-                  <label className="text-gray-700 font-medium">OTP *</label>
-                  <input
-                    type="text"
-                    name="otp"
+              <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit}>
+  {/* Mobile Number */}
+  <div className="flex flex-col">
+    <label className="text-gray-700 font-medium">Mobile No. *</label>
+    <input
+      type="text"
+      name="mobileNo"
+       placeholder="Enter Mobile No."
+       className="border p-2 rounded-md flex-1"
+      value={formData.mobileNo}
+      onChange={handleInputChange}
+    />
+    <button type="button" className="bg-[#75002b] hover:bg-red-700 text-white px-2 py-2 mx-2 my-2 rounded-md" onClick={handleGetOtp}>Get OTP</button>
+  </div>
+
+  {/* OTP */}
+  <div className="flex flex-col">
+    <label className="text-gray-700 font-medium ">OTP *</label>
+    <input
+      type="text"
+      name="otp"
                     placeholder="Enter OTP"
                     className="border p-2 rounded-md"
-                    value={formData.otp}
-                    onChange={handleInputChange}
-                  />
-                </div>
-  
-                {/* PNR No */}
-                <div className="flex flex-col">
-                  <label className="text-gray-700 font-medium">PNR No *</label>
+      value={formData.otp}
+      onChange={handleInputChange}
+    />
+  </div>
+  <div className="flex flex-col">
+                  <label className="text-gray-700 font-medium">PNR No </label>
                   <input
                     type="text"
                     name="pnrNo"
@@ -116,72 +197,78 @@ function HomePage() {
                     onChange={handleInputChange}
                   />
                 </div>
-  
-                {/* Incident Date */}
-                <div className="flex flex-col">
-                  <label className="text-gray-700 font-medium">Incident Date *</label>
-                  <input
-                    type="datetime-local"
-                    name="incidentDate"
-                    className="border p-2 rounded-md"
-                    value={formData.incidentDate}
-                    onChange={handleInputChange}
-                  />
-                </div>
-  
-                {/* Upload File */}
-                <div className="flex flex-col">
-                  <label className="text-gray-700 font-medium">
-                    Upload File (PDF, JPG, PNG, MP4 up to 5 MB)
-                  </label>
-                  <input
-                    type="file"
-                    name="file"
-                    className="border p-2 rounded-md"
-                    accept=".pdf, .jpg, .jpeg, .png, .mp4"
-                    onChange={handleInputChange}
-                  />
-                </div>
-  
-                {/* Grievance Description */}
-                <div className="col-span-2 flex flex-col">
-                  <label className="text-gray-700 font-medium">Grievance Description *</label>
-                  <textarea
-                    name="grievanceDescription"
+
+  {/* File Input */}
+  <div className="flex flex-col">
+    <label className="text-gray-700 font-medium">Upload File </label>
+    <input
+      type="file"
+      name="file"
+      multiple // Allow multiple file uploads
+      className="border p-2 rounded-md"
+
+      onChange={handleInputChange}
+    />
+  </div>
+
+  {/* Grievance Description */}
+  <div className="col-span-2 flex flex-col">
+    <label className="text-gray-700 font-medium">Grievance Description </label>
+    <textarea
+      name="grievanceDescription"
                     className="border p-2 rounded-md"
                     rows="4"
                     placeholder="Enter your grievance details..."
-                    value={formData.grievanceDescription}
-                    onChange={handleInputChange}
-                  ></textarea>
-                </div>
-  
-                {/* Buttons */}
-                <div className="col-span-2 flex justify-end space-x-4">
-                  <button
-                    type="reset"
-                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md"
-                    onClick={() =>
-                      setFormData({
-                        mobileNo: "",
-                        otp: "",
-                        pnrNo: "",
-                        incidentDate: "",
-                        file: null,
-                        grievanceDescription: "",
-                      })
-                    }
-                  >
-                    Reset
-                  </button>
+      value={formData.grievanceDescription}
+      onChange={handleInputChange}
+    />
+  </div>
+
+  {/* Submit Button */}
+  {/* <div className="col-span-2">
+    <button type="submit">Submit</button>
+  </div>
+  <button
+  type="reset"
+  className="bg-red-200 hover:bg-red-400 px-4 py-2 mb-6 rounded-md"
+  onClick={() =>
+    setFormData({
+      mobileNo: "",
+      otp: "",
+      pnrNo: "",
+      file: [], // Reset file to an empty array
+      grievanceDescription: "",
+    })
+  }
+>
+  Reset
+</button> */}
+<div className="col-span-2 flex justify-end space-x-4">
+<button
+  type="reset"
+  className="bg-[#75002b] text-white px-4 py-2 rounded-md hover:bg-red-700"
+  onClick={() =>
+    setFormData({
+      mobileNo: "",
+      otp: "",
+      pnrNo: "",
+      file: [], // Reset file to an empty array
+      grievanceDescription: "",
+    })
+  }
+>
+  Reset
+</button>
                   <button
                     type="submit"
-                    className="bg-[#75002b] text-white px-4 py-2 rounded-md"
+                    className="bg-[#75002b] text-white px-4 py-2 rounded-md hover:bg-red-700"
                   >
                     Submit
                   </button>
                 </div>
-              </form>
+
+</form>
+
             </div>
           );
         case "STATION":
@@ -271,7 +358,7 @@ function HomePage() {
               </li>     
                </ul>
             </div>
-            <div className="h-fit">
+            <div className="overflow-hidden">
             {renderContent()}
             </div>
             
