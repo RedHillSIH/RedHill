@@ -3,43 +3,33 @@ import User from "../models/users.js";
 
 
 
-const auth = async(req,res, next) => {
-    try {
-        
-        const token = req.cookies.acessToken;
-        // console.log(token);
-        const isloggedin=false;
+const auth = async (req, res, next) => {
+  try {
+      const token = req.cookies.acessToken;
 
-        if (!token) {
-          return  res.send({message:"Not Logged In",isloggedin});
-        }
+      if (!token) {
+          req.loggedin = false; // Mark as not logged in
+          return next(); // Proceed without blocking
+      }
 
-        // const key = process.env.SECRET_KEY
+      // Verify the token
+      const isVerified = await jwt.verify(token, process.env.SECRET_KEY);
+      const user = await User.findOne({ _id: isVerified._id }).select("-password");
 
-        const isVerified = await jwt.verify(token, process.env.SECRET_KEY)
-        //console.log(decodedToken);
+      if (!user) {
+          req.loggedin = false; // Mark as not logged in
+          return next(); // Proceed without blocking
+      }
 
-        // console.log(isVerified);
+      req.user = user; // Attach user data to the request
+      req.loggedin = true; // Mark as logged in
+      next(); // Proceed to the next middleware/handler
+  } catch (error) {
+      req.loggedin = false; // In case of any error, treat as not logged in
+      next(); // Proceed without blocking
+  }
+};
 
-        
-        const user = await User.findOne({_id:isVerified._id }).select("-password")
-    
-        if (!user) {
+export default auth;
 
-            
-            
-            return res.status(401).json({message:"Not Logged In",isloggedin}) 
-        }
-       // console.log("yolo")
-        req.user = user;
-        req.loggedin=true;
-        //req.user.id=user.id
-       // console.log(req.user)
-        next()
 
-    } catch (error) {
-      return  res.status(401).json(error.message)
-    }
-}
-
-export default auth ;

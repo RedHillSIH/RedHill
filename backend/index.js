@@ -9,9 +9,13 @@ import { connectDB } from "./database.js";
 const app = express();
 
 dotenv.config();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:3000', // Adjust for your frontend
+    credentials: true // Allow credentials (cookies)
+}));
 app.use(cookieParser());
+app.use(express.json());
+
 
 
 app.use('/user', UserRoutes);

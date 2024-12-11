@@ -3,20 +3,28 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
 
-export const getUser= async(req,res)=>{
-    try{
-        
-;
-        // console.log(req.cookies.ace);
-        const loggedin=req.loggedin;
-        const user = await User.find({_id:req.user._id});
-        res.status(200).json({message:"user fetched successfully ",user,loggedin});
+export const getUser = async (req, res) => {
+    try {
+        const loggedin = req.loggedin;
+
+        if (loggedin) {
+            // User is logged in, fetch user details
+            const user = await User.findOne({ _id: req.user._id });
+            return res.status(200).json({
+                message: "User fetched successfully",
+                user,
+                loggedin,
+            });
+        } else {
+            // User is not logged in
+            return res.status(200).json({ message: "Not logged in", loggedin });
+        }
+    } catch (error) {
+        console.error("Error:", error.message);
+        return res.status(500).json({ error: error.message });
     }
-    catch(error){
-        console.log("Error: "+error);
-        res.status(500).json(error);
-    }
-}
+};
+
 
 
     export const createUser = async(req,res)=>{
@@ -57,7 +65,9 @@ export const getUser= async(req,res)=>{
 
     export const loginUser = async(req,res)=>{
         try {
+            // console.log(req.body);
             const { phone ,password }=req.body;
+            
             const user = await User.findOne({phone});
             if(!user ){
                 return res.status(400).json({message:"Invalid user credentials"})   
@@ -85,15 +95,23 @@ export const getUser= async(req,res)=>{
             }
         catch (error) {
             console.log("Error: " + error.message);
-            res.status(500).json({message: "Internal server error"});
+           return res.status(500).json({message: "Internal server error"});
         }
     }
 
 
    
-    export const logoutUser =  (async(req,res)=>{
-     return res.clearCookie('accessToken').json({message:"User updated sucessfully"});
-            });
+    export const logoutUser = async (req, res) => {
+        try {
+            const loggedin = false;
+            res.clearCookie('accessToken'); // Clear the cookie
+            return res.status(200).json({ message: "User logged out successfully", loggedin }); // Send the response
+        } catch (error) {
+            console.error("Error during logout:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    };
+    
     
 
  

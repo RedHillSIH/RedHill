@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
 function Navbar({islogged}) {
 
     const handleLogOut = async () => {
         try {
-          const res = await axios.get(`${import.meta.env.VITE_API_URL}logout`,{withCredentials:true});
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}user/logout`, { withCredentials: true });
           if (res.data === "Unauthorised Request") {
             islogged=false;
             navigate("/");
@@ -36,8 +37,12 @@ function Navbar({islogged}) {
     </div>
    {islogged?( 
      <div className="">
-     <button className='bg-red-800 p-2 rounded text-white hover:bg-[#75002b] hover:text-white  mx-2' onClick={handleLogOut()}>Log-Out</button>
-
+<button 
+  className='bg-red-800 p-2 rounded text-white hover:bg-[#75002b] hover:text-white mx-2' 
+  onClick={handleLogOut}
+>
+  Log-Out
+</button>
     </div>):(
         <div>
        <a href='/login'><button className='bg-[#dcdef9] p-2 rounded hover:bg-[#75002b] hover:text-white  mx-2'  >Log In</button></a> 

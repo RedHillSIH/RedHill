@@ -15,12 +15,13 @@ function Login() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     const userInfo = {
-      email: data.email,
+      phone: data.phone,
       password: data.password,
     };
+    console.log(userInfo);
     const api=import.meta.env.VITE_API_URL;
     await axios
-      .post(`${api}user/login`, userInfo, { withCredentials: true })
+      .post(`${api}user/login`,userInfo, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         if (res.data) {
@@ -50,16 +51,16 @@ function Login() {
             <h2 className="text-center font-bold text-2xl text-[#75002b] mb-6">Log-In</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
-                <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
-                  Email
+                <label className="block text-black text-sm font-bold mb-2" htmlFor="phone">
+                  Phone
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  {...register('email', { required: true })}
+                  type="tel"
+                  id="phone"
+                  {...register('phone', { required: true })}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
-                {errors.email && <span className="text-red-500 text-sm">This field is required.</span>}
+                {errors.phone && <span className="text-red-500 text-sm">This field is required.</span>}
               </div>
               <div className="mb-6">
                 <label className="block text-black text-sm font-bold mb-2" htmlFor="password">

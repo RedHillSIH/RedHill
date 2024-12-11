@@ -15,7 +15,7 @@ function Register() {
   const onSubmit = async (data) => {
     const userInfo = {
       name: data.name,
-      email: data.email,
+      // email: data.email,
       password: data.password,
       phone: data.phone,
     };
@@ -61,7 +61,7 @@ function Register() {
             {errors.name && <span className="text-red-500 text-sm">This field is required.</span>}
           </div>
           <div className="mb-4">
-            <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
+            {/* <label className="block text-black text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
             <input
@@ -70,7 +70,7 @@ function Register() {
               {...register('email', { required: true })}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
             />
-            {errors.email && <span className="text-red-500 text-sm">This field is required.</span>}
+            {errors.email && <span className="text-red-500 text-sm">This field is required.</span>} */}
           </div>
           <div className="mb-4">
             <label className="block text-black text-sm font-bold mb-2" htmlFor="phone">
