@@ -8,7 +8,7 @@ import putData from "../test.js"
 let ticketid=1234567321
 
 export const createComplaint= async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     // putData()
     // return res.status(200)
     // return
@@ -29,7 +29,8 @@ export const createComplaint= async (req, res) => {
             phone:Phone,
             password: "RANDOML15DIGITSTRING",
             name:"DATA FROM PNR",
-            complaintTickets: []
+            complaintTickets: [],
+            email:"test@gmail.com"
         }) 
     }
    const dataFromPnr=await pnrData.findOne({pnrNumber:PNR})

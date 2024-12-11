@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import UserRoutes from './routes/user.routes.js';
-import ComplaintRoutes from './routes/user.routes.js';
+import ComplaintRoutes from './routes/complaint.register.js';
 import { connectDB } from "./database.js";
 const app = express();
 

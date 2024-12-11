@@ -21,7 +21,7 @@ function Register() {
     };
     const api = import.meta.env.VITE_API_URL;
     await axios
-      .post(`${api}createUser`, userInfo)
+      .post(`${api}user/createUser`, userInfo)
       .then((res) => {
         alert('Registration Successful');
         navigate('/');
