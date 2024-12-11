@@ -3,10 +3,11 @@ import Complaints from "../models/complaints.js"
 import pnrData from "../models/pnrData.js"
 import trainData from "../models/trains.js"
 import employeeData from "../models/employee.js"
+import trainstatus from "../models/trainstatus.js"
 import putData from "../test.js"
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-// import axios from axios;
+import axios from "axios";
 
 let ticketid=1234567321
 
@@ -23,10 +24,10 @@ export const createComplaint= async (req, res) => {
     //   grievanceDescription: "",
     // const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
     const PNR=req.body.pnrNo
+    const PNRLink=req.body.pnrLink
     const Phone=req.body.mobileNo
     const complaintMedia=req.body.files
     const complaintDesc=req.body.grievanceDescription
-
     const loggedin=req.loggedin
     let user;
 
@@ -39,6 +40,7 @@ export const createComplaint= async (req, res) => {
         }
         return password;
       }
+
     function generatelinks(files){
         let op={
             "video":[],
@@ -58,6 +60,19 @@ export const createComplaint= async (req, res) => {
         }
         return op;
     }
+
+    function sanitizeString(input) {
+        return input.toLowerCase().replace(/[\s\-\_\$\&]/g, '');
+    }
+
+    if(!PNR && PNRLink){
+        resp =await axios.post("http://192.168.84.111:8007/process_complaint/",{"text":"look for my PNR in the given image pls","image_links":[PNRLink]})
+        PNR="1234"
+    }
+    if(!PNR){
+        return res.status(422).json({"message":"PNR NOT FOUND"})
+    }
+
 
     if(loggedin){
         user = await User.findOne({_id:req.user._id});
@@ -79,7 +94,32 @@ export const createComplaint= async (req, res) => {
         }) 
     }
 
+    let category=""
+    let subCategory=""
+    let severity=0
+
+    let linkObj=generatelinks(complaintMedia)
+    let complaint_data = {
+        "text": `${complaintDesc}`,
+        "image_links": linkObj['image'],
+        "video_links": linkObj['video']
+    }
+    let resp= await axios.post("http://192.168.84.111:8007/process_complaint/",complaint_data)
+    try{
+        console.log(resp.data.incident_categorization[0])
+        category=resp.data.incident_categorization[0].category_name;
+        subCategory=resp.data.incident_categorization[0].subcategory;
+        severity=resp.data.incident_categorization[0].severity
+    }
+    catch(err){
+        pass;
+    }
+
+
    const dataFromPnr=await pnrData.findOne({pnrNumber:PNR})
+   if(!dataFromPnr){
+    return res.status(422).json({"message":"PNR NOT FOUND"})
+   }
 //    console.log(dataFromPnr)
     let newComplaint= new Complaints({
         complaintId:ticketid,
@@ -106,34 +146,28 @@ export const createComplaint= async (req, res) => {
     ticketid=ticketid+1
     user.complaintTickets.push(currentId)
     await user.save()
-    // console.log("done2")
-    let category=""
-    let subCategory=""
-    let severity=0
-    //ML Model API
-    let linkObj=generatelinks(complaintMedia)
-    let complaint_data = {
-        "text": "Train was delayed by 30 minutes",
-        "image_links": linkObj['image'],
-        "video_links": linkObj['video']
+    resp= await trainstatus.findOne({train_code:dataFromPnr.trainCode})
+    if(!resp){
+        resp=await trainstatus.find()
+        return res.status(500).json(resp)
     }
-    // let resp= await axios.post("http://192.168.84.111:8007/process_complaint/",complaint_data)
-    // console.log(resp)
-    category="ML WORK 1"
-    subCategory="ML WORK 2"
-    severity=2
-    //
+    let station =resp.stations[Math.floor(Math.random() * resp.stations.length)]
+    
+    category=sanitizeString(category)
+    subCategory=sanitizeString(subCategory)
+
     if(category!=""){
         // console.log("done1")
         let dataFromTrain=await trainData.findOne({$and:[
             {trainCode:dataFromPnr.trainCode},
-            {trainDepartureDate:dataFromPnr.trainDepartureDate}
+            {trainDepartureDate:dataFromPnr.trainDepartureDate},
+            {station:station}
         ]})
         // let defa=await
         // console.log(dataFromPnr)
         // console.log(dataFromTrain)
         // return res.status(200)
-        let employeeId=dataFromTrain[category][subCategory]
+        let employeeId=dataFromTrain.category[category][subCategory]
         await Complaints.findOneAndUpdate(
             { complaintId: currentId }, 
             { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })

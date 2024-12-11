@@ -17,7 +17,7 @@ const complaintSchema = new mongoose.Schema({
     subCategory:String,
     employeeWorking:String,
     resolved:Number,
-    severity:Number
+    severity:String
     
 },{ timestamps: true });
 export default mongoose.model('Complaints', complaintSchema);

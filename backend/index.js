@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import UserRoutes from './routes/user.routes.js';
 import ComplaintRoutes from './routes/complaint.register.js';
+import EmployeeRoutes from './routes/employee.routes.js'
 import { connectDB } from "./database.js";
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 
 app.use('/user', UserRoutes);
+app.use('/emp', EmployeeRoutes);
 app.use('/comp', ComplaintRoutes);
 
 

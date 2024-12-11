@@ -1,7 +1,12 @@
 import User from "../models/users.js";
+import employee from "../models/employee.js";
 import Complaints from "../models/complaints.js"
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import complaints from "../models/complaints.js";
+import trainData from "../models/trains.js";
+import trainstatus from "../models/trainstatus.js";
+import pnrData from "../models/pnrData.js";
 
 
 export const getUser = async (req, res) => {
@@ -133,6 +138,103 @@ export const getUser = async (req, res) => {
             return res.status(500).json({ message: "Internal Server Issue", loggedin });
         }
     }
+    export const misc =async(req,res)=>{
+        // const arr =[
+        //     {
+        //         train_code: "12980",
+        //         train_name: "Shirdi-Mumbai CSMT Superfast Express",
+        //         stations: [
+        //             "SHE",
+        //             "ST",
+        //             "DAD",
+        //             "BCT",
+        //             "CSMT"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12981",
+        //         train_name: "Mumbai LTT-Nagpur Superfast Express",
+        //         stations: [
+        //             "LTT",
+        //             "CSMT",
+        //             "NAG",
+        //             "DUR",
+        //             "PNR"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12982",
+        //         train_name :"Bhopal-Mumbai CSMT Superfast Express",
+        //         stations: [
+        //             "BPL",
+        //             "NDLS",
+        //             "CSMT",
+        //             "PNE",
+        //             "BDTS"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12983",
+        //         train_name: "Bhubaneshwar-Chennai Central Superfast Express",
+        //         stations: [
+        //             "BBN",
+        //             "MAS",
+        //             "YPR",
+        //             "PUNE",
+        //             "SBC"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12984",
+        //         train_name: "Sagar-Mysuru Superfast Express",
+        //         stations: [
+        //             "SGR",
+        //             "BZA",
+        //             "SBC",
+        //             "MYS",
+        //             "BLR"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12985",
+        //         train_name: "Indore-Mumbai Central Superfast Express",
+        //         stations: [
+        //             "INDB",
+        //             "BPL",
+        //             "MMR",
+        //             "GRD",
+        //             "BCT"
+        //         ]
+        //     },
+        //     {
+        //         train_code: "12986",
+        //         train_name: "Bangalore City-Jammu Tawi Superfast Express",
+        //         stations: [
+        //             "SBC",
+        //             "BLR",
+        //             "MAS",
+        //             "JAT",
+        //             "PNR"
+        //         ]
+        //     }
+        // ]
+        // for(let poi of arr){
+        //     await trainstatus.create(poi)
+        // }
+        let obj={
+            pnrNumber:"1233",
+            trainCode:"12986",
+            trainName:"Jaipur Double Decker",
+            trainDepartureDate:new Date(2024, 10, 30, 0, 0, 0, 0),
+            passangers:[{"name":"Mihir Bairathi","gender":"M","age":"19"},{"name":"Arshaan Parvez","gender":"M","age":"19"}]
+        }
+        // await pnrData.create(obj)
+        let re =await pnrData.find()
+        let r2= await trainData.find()
+        await complaints.deleteMany()
+        res.status(200).json(re)
+    }
+
     
     
 
