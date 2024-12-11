@@ -21,8 +21,8 @@ export const getUser= async(req,res)=>{
 
     export const createUser = async(req,res)=>{
         try {
-            const { name,password,phone,email } = req.body;
-            const user = await User.findOne({ $or: [{ email }, { phone }] });
+            const { name,password,phone } = req.body;
+            const user = await User.findOne({ phone });
             if(user){
                 return res.status(400).json({message:"User already exists"})      
             }
@@ -31,8 +31,8 @@ export const getUser= async(req,res)=>{
                 const CreatedUser= await User.create({
                     name : name,
                     phone : phone,
-                    email : email,
-                    password : hashPassword
+                    password : hashPassword,
+                    complaintTickets:[]
                 })
                 const options = {
                     expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
@@ -57,8 +57,8 @@ export const getUser= async(req,res)=>{
 
     export const loginUser = async(req,res)=>{
         try {
-            const { email ,password }=req.body;
-            const user = await User.findOne({email});
+            const { phone ,password }=req.body;
+            const user = await User.findOne({phone});
             if(!user ){
                 return res.status(400).json({message:"Invalid user credentials"})   
             }
