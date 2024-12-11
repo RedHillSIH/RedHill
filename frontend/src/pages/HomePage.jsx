@@ -297,7 +297,7 @@ function HomePage() {
 
 
   return (
-    <div>
+    <div className='h-screen'>
         {/* <div className="min-h-12 items-center bg-white min-w-full p-3 md:flex md:justify-between bg-center">
             <div className='flex '>
                 <img className="h-12 mx-2 mt-2" src="https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png"></img>
@@ -329,8 +329,8 @@ function HomePage() {
           backgroundPosition: 'center',
           
         }}>
-            <div className=' h-3/4  w-2.5/3 mx-auto my-auto items-center flex  bg-white/70 rounded-t rounded-b'>
-            <div className="h-full  bg-[#930b3e] w-60 text-white  text-2xl border-t border-l border-b rounded">
+            <div className=' h-3/4  w-2.5/3 mx-auto my-auto items-center md:flex  bg-white/70 rounded-t rounded-b'>
+            <div className="md:h-full  bg-[#930b3e] w-full md:w-60 text-white  text-2xl border-t border-l border-b rounded">
             <ul className="rounded-t rounded-l ">
                 <li
                 className={`border-b p-2 text-lg font-medium cursor-pointer ${

@@ -12,15 +12,15 @@ function Complaints() {
           id: "123456465129",
           seat: "B2 26",
           issueType: "Blanket",
-          severity: "High",
-          status: "Completed",
+          severity: "Low",
+          status: "Pending",
           date: "Sept 05, 2024",
         },
         {
           id: "123456465126",
           seat: "S7 60",
           issueType: "Cleanliness",
-          severity: "High",
+          severity: "Medium",
           status: "Completed",
           date: "Sept 05, 2024",
         },
@@ -37,7 +37,8 @@ function Complaints() {
       };
     
       return (
-        <>
+        
+        <div className="h-screen">
         <Navbar islogged={true}></Navbar>
         <div className="flex h-screen bg-gray-100">
           {/* Sidebar */}
@@ -62,7 +63,8 @@ function Complaints() {
             </main>
           </div>
         </div>
-        </>
+        </div>
+   
       );
       
 }
