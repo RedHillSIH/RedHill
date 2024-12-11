@@ -185,11 +185,12 @@ export const createComplaint= async (req, res) => {
                 expiresIn: "1d",
             
             });
+        
         if(loggedin){
-            return res.status(200).json({ message: 'Complaint Registered Succesfully'});
+            return res.status(200).json({ message: 'Complaint Registered Succesfully',complaintId:currentId,category:category,subCategory:subCategory});
 
         }
-        return res.cookie("acessToken", token,options).status(200).json({ message: 'Complaint Registered Succesfully'});
+        return res.cookie("acessToken", token,options).status(200).json({ message: 'Complaint Registered Succesfully',complaintId:currentId,category:category,subCategory:subCategory});
     }
     else { 
         if(loggedin){
