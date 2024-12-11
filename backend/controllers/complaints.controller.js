@@ -6,6 +6,7 @@ import employeeData from "../models/employee.js"
 import putData from "../test.js"
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+// import axios from axios;
 
 let ticketid=1234567321
 
@@ -38,6 +39,25 @@ export const createComplaint= async (req, res) => {
         }
         return password;
       }
+    function generatelinks(files){
+        let op={
+            "video":[],
+            "image":[],
+            "audio":[]
+        }
+        for (const file of files){
+            if(file.toLowerCase().indexOf("image") !== -1){
+                op["image"].push(file)
+            }
+            else if(file.toLowerCase().indexOf("video") !== -1){
+                op["video"].push(file)
+            }
+            else{
+                op["audio"].push(file)
+            }
+        }
+        return op;
+    }
 
     if(loggedin){
         user = await User.findOne({_id:req.user._id});
@@ -91,6 +111,14 @@ export const createComplaint= async (req, res) => {
     let subCategory=""
     let severity=0
     //ML Model API
+    let linkObj=generatelinks(complaintMedia)
+    let complaint_data = {
+        "text": "Train was delayed by 30 minutes",
+        "image_links": linkObj['image'],
+        "video_links": linkObj['video']
+    }
+    // let resp= await axios.post("http://192.168.84.111:8007/process_complaint/",complaint_data)
+    // console.log(resp)
     category="ML WORK 1"
     subCategory="ML WORK 2"
     severity=2
