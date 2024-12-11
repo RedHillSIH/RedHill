@@ -106,7 +106,7 @@ export const createComplaint= async (req, res) => {
     }
     let resp= await axios.post("http://192.168.84.111:8007/process_complaint/",complaint_data)
     try{
-        console.log(resp.data.incident_categorization[0])
+        // console.log(resp.data.incident_categorization[0])
         category=resp.data.incident_categorization[0].category_name;
         subCategory=resp.data.incident_categorization[0].subcategory;
         severity=resp.data.incident_categorization[0].severity
