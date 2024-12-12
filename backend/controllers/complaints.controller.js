@@ -9,7 +9,6 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import axios from "axios";
 
-let ticketid=1234567321
 
 export const createComplaint= async (req, res) => {
     // console.log(req.body)
@@ -23,12 +22,31 @@ export const createComplaint= async (req, res) => {
     //   file:[],
     //   grievanceDescription: "",
     // const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
+
+
+    function generateTicketId(baseId) {
+        // Generate a random 4-digit number
+        const randomPart = Math.floor(Math.random() * 9000) + 1000;
+        
+        // Combine base ID with random number
+        const uniqueTicketId = parseInt(`${baseId}${randomPart}`);
+        
+        return uniqueTicketId;
+      }
+      
+      // Usage example
+      
+      // Example usage
+    let ticketid=generateTicketId(1234567321)
+
+    
     const PNR=req.body.pnrNo
-    const PNRLink=req.body.pnrLink
+    const PNRLink=req.body.pnrLink 
     const Phone=req.body.mobileNo
     const complaintMedia=req.body.files
     const complaintDesc=req.body.grievanceDescription
     const loggedin=req.loggedin
+    console.log(req.body);
     let user;
 
     function generateRandomPassword(length = 15) {
@@ -47,6 +65,7 @@ export const createComplaint= async (req, res) => {
             "image":[],
             "audio":[]
         }
+
         for (const file of files){
             if(file.toLowerCase().indexOf("image") !== -1){
                 op["image"].push(file)
@@ -66,8 +85,8 @@ export const createComplaint= async (req, res) => {
     }
 
     if(!PNR && PNRLink){
-        resp =await axios.post("http://192.168.84.111:8007/process_complaint/",{"text":"look for my PNR in the given image pls","image_links":[PNRLink]})
-        PNR="1234"
+        // resp =await axios.post("http://192.168.84.111:8007/process_complaint/",{"text":"look for my PNR in the given image pls","image_links":[PNRLink]})
+        PNR="123"
     }
     if(!PNR){
         return res.status(422).json({"message":"PNR NOT FOUND"})
@@ -101,19 +120,21 @@ export const createComplaint= async (req, res) => {
     let linkObj=generatelinks(complaintMedia)
     let complaint_data = {
         "text": `${complaintDesc}`,
-        "image_links": linkObj['image'],
-        "video_links": linkObj['video']
+        "image_urls": linkObj['image'],
+        "video_urls": linkObj['video']
     }
-    let resp= await axios.post("http://192.168.84.111:8007/process_complaint/",complaint_data)
-    try{
-        // console.log(resp.data.incident_categorization[0])
-        category=resp.data.incident_categorization[0].category_name;
-        subCategory=resp.data.incident_categorization[0].subcategory;
-        severity=resp.data.incident_categorization[0].severity
-    }
-    catch(err){
-        pass;
-    }
+    let resp=""
+    // try{
+    //     resp= await axios.post("http://172.16.9.161:8010/classify_complaint/",complaint_data)
+    //     console.log(resp.data)
+    //     category=resp.data.category;
+    //     subCategory=resp.data.subcategory;
+    //     severity=resp.data.severity
+    //     // console.log(category);
+    // }
+    // catch(err){
+    //     console.log(err);
+    // }
 
 
    const dataFromPnr=await pnrData.findOne({pnrNumber:PNR})
@@ -134,11 +155,11 @@ export const createComplaint= async (req, res) => {
         trainDepartureDate: dataFromPnr.trainDepartureDate,
         media: complaintMedia,
         description: complaintDesc,
-        category:"",
-        subCategory:"",
+        category:category,
+        subCategory:subCategory,
         employeeWorking:"",
         resolved:0,
-        severity:0
+        severity:severity
     })
 
     await newComplaint.save()
@@ -167,14 +188,15 @@ export const createComplaint= async (req, res) => {
         // console.log(dataFromPnr)
         // console.log(dataFromTrain)
         // return res.status(200)
-        let employeeId=dataFromTrain.category[category][subCategory]
-        await Complaints.findOneAndUpdate(
-            { complaintId: currentId }, 
-            { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
-        // console.log("done3")
-        const emp=await employeeData.findOne({employeeId:employeeId})
-        emp.complaints.push(currentId)
-        emp.save()
+        // let employeeId=dataFromTrain.category[category][subCategory]
+        // await Complaints.findOneAndUpdate(
+        //     { complaintId: currentId }, 
+        //     { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
+        // // console.log("done3")
+        // const emp=await employeeData.findOne({employeeId:employeeId})
+        // console.log(emp);
+        // emp.complaints.push(currentId)
+        // emp.save()
         const options = {
             expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
              //only manipulate by server not by client/user
@@ -197,6 +219,16 @@ export const createComplaint= async (req, res) => {
             return res.status(500).json({ message: 'Complaint Registered Succesfully'});
 
         }
+        const options = {
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+             //only manipulate by server not by client/user
+             secure:false,
+             httpOnly:true
+        };
+        const token = jwt.sign({_id: user._id }, process.env.SECRET_KEY, {
+                expiresIn: "1d",
+            
+            });
         return res.cookie("acessToken", token,options).status(500).json({ message: 'Could not Register complaint,Complaint is saved but '});
     }
         

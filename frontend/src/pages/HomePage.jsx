@@ -53,6 +53,7 @@ function HomePage() {
       pnrNo: "",
       // incidentDate: "",
       file:[],
+      files:[],
       grievanceDescription: "",
     });
     const [otpGenerated, setOtpGenerated] = useState("");
@@ -128,7 +129,7 @@ function HomePage() {
             
             setislogged(true);
             //setComplaints(res.data.myComplaints.myComplaints)
-            //console.log(res.data.myComplaints)
+            // console.log(res.data.myComplaints)
             setComplaints(res.data.myComplaints)
 
           }
@@ -137,7 +138,7 @@ function HomePage() {
         }
       };
       getComp();
-      console.log(complaints)
+      // console.log(complaints)
     }, []);
   
     // Dummy OTP Generator
@@ -182,6 +183,11 @@ function HomePage() {
     //   console.log("Form Data to be sent to backend:", jsonData);
     //   alert("Form submitted successfully!");
     // };
+
+   
+    
+
+
     const handleSubmit = async (e) => {
       e.preventDefault(); // Prevent the default form submission
     
@@ -192,15 +198,18 @@ function HomePage() {
     
       try {
         const uploadedFiles = await convert(formData); // Ensure file conversion is processed
-        // console.log("Uploaded files:", uploadedFiles);
-      
-        setFormData((prevData) => ({
-          ...prevData,
-          files: uploadedFiles,
-        }));
-        // console.log(formData)
+        // console.log(uploadedFiles)
+        // console.log("starting")
+        // setFormData((prevData) => ({
+        //   ...prevData,
+        //   files: uploadedFiles,
+        // }));
+        let tempObj=formData
+        tempObj.files=uploadedFiles
+        // console.log(tempObj.files)
+
         await axios
-        .post(`${import.meta.env.VITE_API_URL}comp/create`,formData, { withCredentials: true })
+        .post(`${import.meta.env.VITE_API_URL}comp/create`,tempObj,{ withCredentials: true })
         .then((res) => {
           console.log(res.data);
           if (res.data) {
@@ -209,6 +218,8 @@ function HomePage() {
             // navigate('/');
           }
         })
+
+
         // Add logic to send `formData` to the backend or perform necessary actions
       } catch (error) {
         console.error("Error during form submission:", error.message);
@@ -360,7 +371,7 @@ function HomePage() {
 
               return (
 
-                <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl ">
+                <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl overflow-scroll">
                   
                   <h1 className="text-2xl font-bold text-[#75002b] mb-4">Complaints</h1>
                   <div className= "h-96 ">

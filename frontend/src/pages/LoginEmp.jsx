@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import NavbarSimple from '../components/NavbarSimple';
-function Login() {
+function LoginEmp() {
   const {
     register,
     handleSubmit,
@@ -15,18 +15,19 @@ function Login() {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     const userInfo = {
-      phone: data.phone,
+      employeeId: data.Id,
       password: data.password,
     };
     console.log(userInfo);
     const api=import.meta.env.VITE_API_URL;
+    console.log(userInfo)
     await axios
-      .post(`${api}user/login`, body=userInfo, { withCredentials: true })
+      .post(`${api}emp/log`, userInfo, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         if (res.data) {
           alert('Log-In Successful');
-          navigate('/');
+          navigate('/complains');
         }
       })
       .catch((err) => {
@@ -52,15 +53,15 @@ function Login() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <label className="block text-black text-sm font-bold mb-2" htmlFor="phone">
-                  Phone
+                  Id
                 </label>
                 <input
-                  type="tel"
-                  id="phone"
-                  {...register('phone', { required: true })}
+                  type="text"
+                  id="Id"
+                  {...register('Id', { required: true })}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
-                {errors.phone && <span className="text-red-500 text-sm">This field is required.</span>}
+                {errors.Id && <span className="text-red-500 text-sm">This field is required.</span>}
               </div>
               <div className="mb-6">
                 <label className="block text-black text-sm font-bold mb-2" htmlFor="password">
@@ -98,4 +99,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginEmp;

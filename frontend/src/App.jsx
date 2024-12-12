@@ -5,6 +5,7 @@ import Complaints from "./pages/Complaints";
 import Login from "./pages/Login";
 import dotenv from 'dotenv';
 import Register from "./pages/Register";
+import LoginEmp from "./pages/LoginEmp";
 // dotenv.config();
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
         <Route path="/complains" element={<Complaints />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/emp/log" element={<LoginEmp />} />
+
 
 
 

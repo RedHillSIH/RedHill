@@ -2,6 +2,7 @@ import React from "react";
 
 const ComplaintTable = ({ complaints, onComplaintClick }) => {
   // complaints[0].status="Completed";
+  console.log(complaints);
   
   return (
   
