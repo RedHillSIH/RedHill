@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '../components/Navbar';
 import axios from "axios"
 import ComplaintTable from '../components/ComplaintTable';
 import ComplaintModal from '../components/ComplaintModal';
 import ComplaintModalUser from '../components/ComplaintModalUser';
+import ChatWidget from "../components/ChatWidget"
+import { Send, Image, Paperclip, Mic, X } from 'lucide-react';
+
 
 // loading gif - https://railmadad.indianrailways.gov.in/madad/final/images/RailMadad.gif
 // logo- https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png
@@ -11,26 +14,90 @@ import ComplaintModalUser from '../components/ComplaintModalUser';
 
 
 function HomePage() {
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioPreview, setAudioPreview] = useState(null);
+  let auFile;
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const [selectedCategory, setSelectedCategory] = useState("currcomp.category" || "");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("currcomp.subCategory" || "");
+  const [compreg, setcompreg] = useState(false);
 
-  const [complaintss] = useState([
+  const [currcomp,setcurrcomp] = useState(
     {
-      id: "123456465129",
-      seat: "B2 26",
-      issueType: "Blanket",
+      complaintId: "123456465129",
+      // seat: "B2 26",
+      category: "Coach-Cleanliness",
       severity: "Low",
-      status: "Pending",
-      date: "Sept 05, 2024",
-    },
-    {
-      id: "123456465126",
-      seat: "S7 60",
-      issueType: "Cleanliness",
-      severity: "Medium",
-      status: "Completed",
-      date: "Sept 05, 2024",
-    },
-  ]);
+      subCategory: "Toilet",
+      mobileNo:"123",
+      pnrNo:"123",
 
+
+    }
+   
+  );
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+  
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+  
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        
+        // Create a File object to work with your existing handleInputChange
+        const audioFile = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+        
+        // Trigger input change with the audio file
+        auFile=audioFile
+        const event = {
+          target: {
+            name: 'audioFile',
+            type: 'file',
+            files: [audioFile]
+          }
+        };
+        
+        handleInputChange(event);
+        // Create audio preview
+        setAudioPreview({
+          url: URL.createObjectURL(audioBlob)
+        });
+      };
+  
+      mediaRecorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      alert('Could not access microphone. Please check permissions.');
+    }
+  };
+  
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      // console.log(formData);
+    }
+  };
+  
+  const clearAudioPreview = () => {
+    setAudioPreview(null);
+    
+    // Reset audio file in form data
+    setFormData((prevData) => {
+      const newFormData = { ...prevData };
+      delete newFormData.audioFile;
+      return newFormData;
+    });
+  };
   const [selectedComplaint, setSelectedComplaint] = useState(null);
 
   const handleComplaintClick = (complaint) => {
@@ -42,6 +109,15 @@ function HomePage() {
   };
 
 
+  const handleUpdate = () => {
+    // Call the update function (replace with actual PUT API logic)
+    const onUpdateCategory={
+      "complaintId":currcomp.complaintId,
+      "category": selectedCategory,
+      "subCategory": selectedSubCategory
+    };
+    alert("Category and Subcategory updated successfully!");
+  };
 
 
     const [selectedOption, setSelectedOption] = useState("TRAIN");
@@ -152,6 +228,75 @@ function HomePage() {
       }
     };
 
+    const categories = {
+      "Medical Assistance": ["Medical Assistance"],
+      "Security": [
+        "Eve-teasing/ /Misbehaviour with lady passengers/Rape",
+        "Theft of Passengers Belongings/Snatching",
+        "Unauthorized person in Ladies/Disabled 03/1 Comp Coach/SLR/Reserve Coach",
+        "Harassment/Extortion by Security Personnel/Railway personnel",
+        "Nuisance by Hawkers/Beggar/Eunuch",
+        "Luggage Left Behind/Unclaimed/Suspected Articles",
+        "Passenger Missing/Not responding call",
+        "Smoking/Drinking Alcohol/Narcotics",
+        "Dacoity/Robbery/Murder/Riots",
+        "Quarrelling/Hooliganism",
+        "Passenger fallen down",
+        "Nuisance by passenger",
+        "Misbehaviour",
+        "Others",
+      ],
+      "Divyangjan Facilities": [
+        "Divyangjan coach unavailability",
+        "Divyangjan toilet /washbasin",
+        "Braille signage in coach",
+        "Others",
+      ],
+      "Facilities for Women with Special needs": ["Baby Food"],
+      "Electrical Equipment": [
+        "Air Conditioner",
+        "Fans",
+        "Lights",
+        "Charging Points",
+        "Others",
+      ],
+      "Coach-Cleanliness": [
+        "Toilet",
+        "Washbasin",
+        "Cockroach / Rodents",
+        "Coach Interior",
+        "Coach Exterior",
+        "Others",
+      ],
+      "Punctuality": ["NTES APP", "Late Running", "Others"],
+      "Water Availability": [
+        "Packages Drinking Water / Rail Neer",
+        "Toilet",
+        "Washbasin",
+        "Others",
+      ],
+      "Coach - Maintenance": [
+        "Window/Seat Broken",
+        "Window/Door locking problem",
+        "Tap leaking/Tap not working",
+        "Broken/Missing Toilet Fittings",
+        "Jerks/Abnormal Sound",
+        "Others",
+      ],
+      "Catering & Vending Services": [
+        "Overcharging",
+        "Service Quality & Hygiene",
+        "Food Quality & Quantity",
+        "E-Catering",
+        "Food & Water Not Available",
+        "Others",
+      ],
+      "Staff Behaviour": ["Staff Behaviour"],
+      "Corruption/ Bribery": ["Corruption/ Bribery"],
+      "Bed Roll": ["Dirty / Torn", "Overcharging", "Non Availability", "Others"],
+      "Miscellaneous": ["Miscellaneous"],
+    };
+  
 
     
   
@@ -189,8 +334,40 @@ function HomePage() {
 
 
     const handleSubmit = async (e) => {
+      console.log(audioPreview)
       e.preventDefault(); // Prevent the default form submission
-    
+      try {
+        // Fetch the blob data from the Blob URL
+        const responseAudio= await fetch(audioPreview);
+        const blob = await responseAudio.blob();
+        const fileAudio = new File([blob], "userAudio", { type: blob.type });
+        console.log(fileAudio); // The File object
+        const formDataAudio = new FormData();
+          formDataAudio.append('file', fileAudio);
+          formDataAudio.append('upload_preset', import.meta.env.VITE_APP_UPLOAD_PRESET);
+          try {
+            const responseAudio = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_APP_CLOUD_NAME}/auto/upload`, {
+                method: 'POST',
+                body: formDataAudio,
+            });
+
+            const responseDataAudio = await responseAudio.json();
+
+            if (responseAudio.ok) {
+                // Add the uploaded image's URL to the output array
+                let myAudioUrl=responseDataAudio.secure_url;
+                console.log(myAudioUrl)
+            } else {
+                console.error(`Error uploading file: ${responseDataAudio.error.message}`);
+            }
+        } catch (error) {
+            console.error(`Network error: ${error.message}`);
+        }
+
+    } catch (error) {
+        console.error("Error creating file from Blob URL:", error);
+    }
+      return;
       if (formData.otp !== otpGenerated) {
         alert("Invalid OTP. Please try again.");
         return;
@@ -215,6 +392,9 @@ function HomePage() {
           if (res.data) {
              alert('Complaint Registered');
              console.log(res.data);
+             setSelectedOption("currComp")
+             setComplaints(res.data)
+             setcompreg(true);
             // navigate('/');
           }
         })
@@ -272,6 +452,7 @@ function HomePage() {
                     onChange={handleInputChange}
                   />
                 </div>
+                
 
   {/* File Input */}
   <div className="flex flex-col">
@@ -285,6 +466,8 @@ function HomePage() {
       onChange={handleInputChange}
     />
   </div>
+    
+
 
   {/* Grievance Description */}
   <div className="col-span-2 flex flex-col">
@@ -298,6 +481,8 @@ function HomePage() {
       onChange={handleInputChange}
     />
   </div>
+
+     
 
   {/* Submit Button */}
   {/* <div className="col-span-2">
@@ -319,6 +504,40 @@ function HomePage() {
   Reset
 </button> */}
 <div className="col-span-2 flex justify-end space-x-4">
+   {/* Voice Input Section */}
+   <div className=" flex-col col-span-1">
+          <label className="text-gray-700 font-medium">Voice Input</label>
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={isRecording ? stopRecording : startRecording}
+              className={`p-2 rounded-lg ${
+                isRecording 
+                  ? 'bg-red-100 text-red-600' 
+                  : 'bg-[#75002b] text-white'
+              }`}
+            >
+              <Mic className="w-5 h-5" />
+              {isRecording ? 'Stop Recording' : 'Start Recording'}
+            </button>
+            
+            {audioPreview && (
+              <div className="flex items-center space-x-2">
+                <audio controls className="h-10">
+                  <source src={audioPreview.url} type="audio/wav" />
+                  Your browser does not support the audio element.
+                </audio>
+                <button 
+                  type="button"
+                  onClick={clearAudioPreview}
+                  className="bg-red-500 text-white rounded-full p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
 <button
   type="reset"
   className="bg-[#75002b] text-white px-4 py-2 rounded-md hover:bg-red-700"
@@ -346,14 +565,81 @@ function HomePage() {
 
             </div>
           );
-        case "STATION":
+        case "currComp":
           return (
-            <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl">
-              <h1 className="text-2xl font-bold text-[#75002b] mb-4">Station Details</h1>
-              <form>
-                <p className="text-gray-500">This is a blank form for now.</p>
-              </form>
-            </div>
+            <div className="shadow-md w-full p-4 rounded-md border mt-4">
+      <h1 className="text-2xl font-bold text-[#75002b] mt-2 mb-4">Complaint Details</h1>
+      <p className=' text-green-700 mx-2 my-2'>Your complaint has been filed with the following details. In case of any error kindly update.</p>
+      <div className="grid grid-cols-2 gap-4">
+        {/* Complaint ID */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium">Complaint ID</label>
+          <p className="border p-2 rounded-md bg-gray-100">{currcomp.complaintId}</p>
+        </div>
+
+        {/* Mobile Number */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium">Mobile No.</label>
+          <p className="border p-2 rounded-md bg-gray-100">{currcomp.mobileNo}</p>
+        </div>
+
+        {/* PNR Number */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium">PNR No.</label>
+          <p className="border p-2 rounded-md bg-gray-100">{currcomp.pnrNo} </p>
+        </div>
+
+        {/* Grievance Description */}
+        <div className="col-span-2 flex flex-col">
+          <label className="text-gray-700 font-medium">Grievance Description</label>
+          <p className="border p-2 rounded-md bg-gray-100">{currcomp.grievanceDescription}</p>
+        </div>
+
+                {/* Category Dropdown */}
+                <div className="flex flex-col">
+          <label className="text-gray-700 font-medium">Category</label>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="border p-2 rounded-md"
+          >
+            <option value="">Select Category</option>
+            {Object.keys(categories).map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Sub-Category Dropdown */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-medium">Sub-Category</label>
+          <select
+            value={selectedSubCategory}
+            onChange={(e) => setSelectedSubCategory(e.target.value)}
+            className="border p-2 rounded-md"
+          >
+            <option value="">Select Sub-Category</option>
+            {(categories[selectedCategory] || []).map((subCategory) => (
+              <option key={subCategory} value={subCategory}>
+                {subCategory}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Update Button */}
+        <div className="col-span-2 flex justify-end mt-4">
+          <button
+            onClick={handleUpdate}
+            className="bg-[#75002b] text-white px-4 py-2 rounded-md hover:bg-red-700"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
           );
           case "Complaints":
             if(islogged === false){
@@ -444,14 +730,23 @@ function HomePage() {
                 onClick={() => setSelectedOption("TRAIN")}
               >
                 TRAIN
-              </li> 
+              </li>
+              {compreg?(<li
+                className={`border-b p-2 text-lg font-medium cursor-pointer ${
+                  selectedOption === "currComp" ? "bg-[#75002b] underline" : ""
+                }`}
+                onClick={() => setSelectedOption("currComp")}
+              >
+                Current Complaint
+              </li> ):(<div></div>)
+              } 
               {/* <li
                 className={`border-b p-2 text-lg font-medium cursor-pointer ${
-                  selectedOption === "STATION" ? "bg-[#75002b] underline" : ""
+                  selectedOption === "currComp" ? "bg-[#75002b] underline" : ""
                 }`}
-                onClick={() => setSelectedOption("STATION")}
+                onClick={() => setSelectedOption("currComp")}
               >
-                STATION
+                Current Complaint
               </li>      */}
               <li
                 className={`border-b p-2 text-lg font-medium cursor-pointer ${
@@ -468,6 +763,9 @@ function HomePage() {
             </div>
             
                      </div>
+        </div>
+        <div className="">
+          <ChatWidget></ChatWidget>
         </div>
         <div className=" p-2 fixed-bottom bg-[#75002b] text-white text-1.5xl text-center">Copyright ©2019 RAILMADAD. All Rights Reserved.</div>
     </div>
