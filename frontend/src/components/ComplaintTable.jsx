@@ -11,7 +11,7 @@ const ComplaintTable = ({ complaints, onComplaintClick }) => {
       <thead className="hidden sm:table-header-group sm:bg-gray-200 rounded">
       <tr>
             <th className=" px-4 py-2 text-left">Ref No.</th>
-            <th className=" px-4 py-2 text-left">Seat</th>
+            {/* <th className=" px-4 py-2 text-left">Seat</th> */}
             <th className=" px-4 py-2 text-left">Issue Type</th>
             <th className=" px-4 py-2 text-left">Severity</th>
             <th className=" px-4 py-2 text-left">Status</th>
@@ -21,13 +21,13 @@ const ComplaintTable = ({ complaints, onComplaintClick }) => {
         <tbody className="bg-gray-100 ">
           {complaints.map((complaint) => (
             <tr
-              key={complaint.id}
+              key={complaint.complaintId}
               className="bg-white hover:bg-gray-50 cursor-pointer h-16 rounded  border-4 "
               onClick={() => onComplaintClick(complaint)}
             >
-              <td className=" px-4 py-2 text-blue-600 font-semibold ">{complaint.id}</td>
-              <td className=" px-4 py-2">{complaint.seat}</td>
-              <td className=" px-4 py-2">{complaint.issueType}</td>
+              <td className=" px-4 py-2 text-blue-600 font-semibold ">{complaint.complaintId}</td>
+              {/* <td className=" px-4 py-2">{complaint.seat}</td> */}
+              <td className=" px-4 py-2">{complaint.category}</td>
              <td
   className={` px-4 py-2 ${
     complaint.severity === "High"
@@ -39,15 +39,8 @@ const ComplaintTable = ({ complaints, onComplaintClick }) => {
 >
   {complaint.severity}
 </td>
-              <td className={` px-4 py-2 ${
-    complaint.status === "Pending"
-      ? "text-red-600 font-semibold"
-      : complaint.status === "Completed"
-      ? "text-green-600"
-      :"text-yellow-500"
-      
-  }`}>•{complaint.status}</td>
-              <td className=" px-4 py-2">{complaint.date}</td>
+              {(complaint.resolved===0)?(<td className="text-yellow-500">Pending</td>):(<td className="text-green-600">Completed</td>)}
+              <td className=" px-4 py-2">{complaint.createdAt}</td>
             </tr>
           ))}
         </tbody>

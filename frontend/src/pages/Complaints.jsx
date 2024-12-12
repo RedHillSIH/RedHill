@@ -1,72 +1,103 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ComplaintModal from '../components/ComplaintModal';
 import ComplaintTable from '../components/ComplaintTable';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 
 function Complaints() {
-    // Complaints data is stored in the state
-    const [complaints] = useState([
-        {
-          id: "123456465129",
-          seat: "B2 26",
-          issueType: "Blanket",
-          severity: "Low",
-          status: "Pending",
-          date: "Sept 05, 2024",
-        },
-        {
-          id: "123456465126",
-          seat: "S7 60",
-          issueType: "Cleanliness",
-          severity: "Medium",
-          status: "Completed",
-          date: "Sept 05, 2024",
-        },
-      ]);
-    
-      const [selectedComplaint, setSelectedComplaint] = useState(null);
-    
-      const handleComplaintClick = (complaint) => {
+    const navigate = useNavigate();
+    const [isLogged, setIsLogged] = useState(false);
+    const [complaints, setComplaints] = useState([]);
+    const [selectedComplaint, setSelectedComplaint] = useState(null);
+
+    // Fetch user authentication status
+    useEffect(() => {
+        const checkUserAuth = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}emp/get`, { 
+                    withCredentials: true 
+                });
+
+                if (res.data.loggedin === false) {
+                    setIsLogged(false);
+                    navigate("/login");
+                } else {
+                    setIsLogged(true);
+                }
+            } catch (error) {
+                console.error("Authentication check failed:", error);
+                navigate("/");
+            }
+        };
+
+        checkUserAuth();
+    }, [navigate]);
+
+    // Fetch complaints
+    useEffect(() => {
+        const fetchComplaints = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}emp/complaints`, { 
+                    withCredentials: true 
+                });
+
+                if (res.data.loggedin === true) {
+                    setComplaints(res.data.myComplaints || []);
+                    setIsLogged(true);
+                } else {
+                    setIsLogged(false);
+                    navigate("/");
+                }
+            } catch (error) {
+                console.error("Failed to fetch complaints:", error);
+                setComplaints([]);
+                navigate("/");
+            }
+        };
+
+        if (isLogged) {
+            fetchComplaints();
+        }
+    }, [isLogged, navigate]);
+
+    const handleComplaintClick = (complaint) => {
         setSelectedComplaint(complaint);
-      };
+    };
     
-      const handleCloseModal = () => {
+    const handleCloseModal = () => {
         setSelectedComplaint(null);
-      };
+    };
     
-      return (
-        
+    return (
         <div className="h-screen">
-        <Navbar islogged={true}></Navbar>
-        <div className="flex h-screen bg-gray-100">
-          {/* Sidebar */}
-          <Sidebar selected="Complaints" />
-    
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col">
-            <header className="bg-white shadow p-4">
-              <h1 className="text-2xl font-bold">Statistics</h1>
-            </header>
-            <main className="flex-1 p-6 overflow-y-auto">
-              <ComplaintTable
-                complaints={complaints}
-                onComplaintClick={handleComplaintClick}
-              />
-              {selectedComplaint && (
-                <ComplaintModal
-                  complaint={selectedComplaint}
-                  onClose={handleCloseModal}
-                />
-              )}
-            </main>
-          </div>
+            <Navbar islogged={isLogged} />
+            <div className="flex h-screen bg-gray-100">
+                <Sidebar selected="Complaints" />
+                
+                <div className="flex-1 flex flex-col">
+                    <header className="bg-white shadow p-4">
+                        <h1 className="text-2xl font-bold">Complaints</h1>
+                    </header>
+                    
+                    <main className="flex-1 p-6 overflow-y-auto">
+                        <ComplaintTable
+                            complaints={complaints}
+                            onComplaintClick={handleComplaintClick}
+                        />
+                        
+                        {selectedComplaint && (
+                            <ComplaintModal
+                                complaint={selectedComplaint}
+                                onClose={handleCloseModal}
+                            />
+                        )}
+                    </main>
+                </div>
+            </div>
         </div>
-        </div>
-   
-      );
-      
+    );
 }
 
-export default Complaints
+export default Complaints;

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import axios from "axios"
+import ComplaintTable from '../components/ComplaintTable';
+import ComplaintModal from '../components/ComplaintModal';
+import ComplaintModalUser from '../components/ComplaintModalUser';
 
 // loading gif - https://railmadad.indianrailways.gov.in/madad/final/images/RailMadad.gif
 // logo- https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png
@@ -8,6 +11,39 @@ import axios from "axios"
 
 
 function HomePage() {
+
+  const [complaintss] = useState([
+    {
+      id: "123456465129",
+      seat: "B2 26",
+      issueType: "Blanket",
+      severity: "Low",
+      status: "Pending",
+      date: "Sept 05, 2024",
+    },
+    {
+      id: "123456465126",
+      seat: "S7 60",
+      issueType: "Cleanliness",
+      severity: "Medium",
+      status: "Completed",
+      date: "Sept 05, 2024",
+    },
+  ]);
+
+  const [selectedComplaint, setSelectedComplaint] = useState(null);
+
+  const handleComplaintClick = (complaint) => {
+    setSelectedComplaint(complaint);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedComplaint(null);
+  };
+
+
+
+
     const [selectedOption, setSelectedOption] = useState("TRAIN");
     const[islogged,setislogged]=useState(false);
     const[complaints,setComplaints]=useState([]);
@@ -68,13 +104,40 @@ function HomePage() {
             // setLoad(false);
             
             setislogged(true);
+            // console.log(res.data.user);
+
+            // setComplaints(res.data.myComplaints);
           }
         } catch (error) {
           console.log(error);
         }
       };
       getUser();
-     // console.log(user,profilePicture)
+    }, []);
+
+    useEffect(() => {
+      //setLoad(true);
+      const getComp = async () => {
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_API_URL}user/getComplaints`, { withCredentials: true });
+          if (res.data.loggedin === false) {
+            // navigate("/");
+            setislogged(false)
+          } else {
+            // setLoad(false);
+            
+            setislogged(true);
+            //setComplaints(res.data.myComplaints.myComplaints)
+            //console.log(res.data.myComplaints)
+            setComplaints(res.data.myComplaints)
+
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getComp();
+      console.log(complaints)
     }, []);
   
     // Dummy OTP Generator
@@ -142,6 +205,7 @@ function HomePage() {
           console.log(res.data);
           if (res.data) {
              alert('Complaint Registered');
+             console.log(res.data);
             // navigate('/');
           }
         })
@@ -200,7 +264,7 @@ function HomePage() {
 
   {/* File Input */}
   <div className="flex flex-col">
-    <label className="text-gray-700 font-medium">Upload File </label>
+    <label className="text-gray-700 font-medium">Upload File <span className=" text-green-600">(Note:Both PNR and issue can be extracted from media.)</span></label>
     <input
       type="file"
       name="file"
@@ -281,14 +345,44 @@ function HomePage() {
             </div>
           );
           case "Complaints":
-          return (
-            <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl">
+            if(islogged === false){
+              return(
+                <div className="bg-white shadow-md rounded-md p-8 w-full">
               <h1 className="text-2xl font-bold text-[#75002b] mb-4">Complaints</h1>
               <form>
-                <p className="text-gray-500">This is a blank form for now.</p>
+              <p className="text-gray-500">Please <a href="/login" className='font-semibold text-blue-600'>login</a> to review your past complaints.</p>
               </form>
             </div>
-          );
+
+              )
+            }
+            else{
+
+              return (
+
+                <div className="bg-white shadow-md rounded-md p-8 w-full max-w-4xl ">
+                  
+                  <h1 className="text-2xl font-bold text-[#75002b] mb-4">Complaints</h1>
+                  <div className= "h-96 ">
+                  <main className="flex-1 p-6 overflow-y-auto">
+              <ComplaintTable
+                complaints={complaints}
+                onComplaintClick={handleComplaintClick}
+              />
+              {selectedComplaint && (
+                <ComplaintModalUser
+                  complaint={selectedComplaint}
+                  onClose={handleCloseModal}
+                />
+              )}
+            </main>
+                  </div>
+                  
+                </div>
+              );
+
+            }
+          
         default:
           return null;
       }
