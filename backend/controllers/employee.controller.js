@@ -9,8 +9,9 @@ export const getEmp = async (req, res) => {
         const loggedin = req.loggedin;
 
         if (loggedin) {
+            // console.log("Hello")
             // User is logged in, fetch user details
-            const user = await employee.findOne({ _id: req.emp._id });
+            const user = await employee.findOne({ _id: req.user._id });
             return res.status(200).json({
                 message: "User fetched successfully",
                 user,
@@ -26,53 +27,17 @@ export const getEmp = async (req, res) => {
     }
 };
 
-    // export const createUser = async(req,res)=>{
-    //     try {
-    //         const { name,password,phone } = req.body;
-    //         const user = await User.findOne({ phone });
-    //         if(user){
-    //             return res.status(400).json({message:"User already exists"})      
-    //         }
-    //         else{
-    //             const hashPassword = await bcryptjs.hash(password,10);
-    //             const CreatedUser= await User.create({
-    //                 name : name,
-    //                 phone : phone,
-    //                 password : hashPassword,
-    //                 complaintTickets:[]
-    //             })
-    //             const options = {
-    //                 expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-    //                  //only manipulate by server not by client/user
-    //                  secure:false,
-    //                  httpOnly:true
-    //             };
-    //                 const token = jwt.sign({_id: CreatedUser._id }, process.env.SECRET_KEY, {
-    //                     expiresIn: "1d",
-                    
-    //                 });
-    //             return res.cookie("acessToken", token,options).status(200).json({message:"User Registered sucessfully",CreatedUser})
-
-    //         }
-            
-    //     } catch (error) {
-    //         console.log("Error: " + error.message);
-    //         res.status(500).json({message: "Internal server error"});
-    //     }
-    // }
-
-
 export const loginEmp = async(req,res)=>{
         try {
             // console.log(req.body);
             const { employeeId ,password }=req.body;
             
-            const user = await employee.findOne({employeeId});
-            if(!user ){
+            const emp = await employee.findOne({employeeId});
+            if(!emp ){
                 return res.status(400).json({message:"Invalid user credentials"})   
             }
             else{
-                const isMatch = await bcryptjs.compare(password,user.password);
+                const isMatch = await bcryptjs.compare(password,emp.password);
                 if(isMatch){
                     const options = {
                         expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
@@ -81,7 +46,7 @@ export const loginEmp = async(req,res)=>{
                          httpOnly:true
     
                     };
-                        const token = jwt.sign({_id:user._id }, process.env.SECRET_KEY, {
+                        const token = jwt.sign({_id:emp._id }, process.env.SECRET_KEY, {
                             expiresIn: "1d",
                         });
                     return res.cookie("acessToken", token,options).status(200).json({message:"User logged in sucessfully"

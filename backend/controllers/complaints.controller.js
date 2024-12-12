@@ -11,18 +11,83 @@ import axios from "axios";
 
 
 export const createComplaint= async (req, res) => {
-    // console.log(req.body)
-    // putData()
-    // return res.status(200)
-    // return
-    // mobileNo: "",
-    //   otp: "",
-    //   pnrNo: "",
-    //   // incidentDate: "",
-    //   file:[],
-    //   grievanceDescription: "",
-    // const {PNR:pnrNo,Phone:mobileNo,complaintMedia:files,complaintDesc:grievanceDescription}=req.body
 
+    const categoryMap = {
+        "medicalassistance": "Medical Assistance",
+        "security":"Security",
+        "eveteasingmisbehaviourwithladypassengersrape": "Eve-teasing/ /Misbehaviour with lady passengers/Rape",
+        "theftofpassengersbelongingssnatching": "Theft of Passengers Belongings/Snatching",
+        "unauthorizedpersoninladiesdisabledcoachslrrreservecouch": "Unauthorized person in Ladies/Disabled Coach/SLR/Reserve Coach",
+        "harassmentextortionbysecuritypersonnelrailwaypersonnel": "Harassment/Extortion by Security Personnel/Railway personnel",
+        "nuisancebyhawkersbeggareunuch": "Nuisance by Hawkers/Beggar/Eunuch",
+        "luggageleftbehindunclaimedsuspectedarticles": "Luggage Left Behind/Unclaimed/Suspected Articles",
+        "passengermissingnotrespondingcall": "Passenger Missing/Not responding call",
+        "smokingdrinkingalcoholnarcotics": "Smoking/Drinking Alcohol/Narcotics",
+        "dacoityrobberymurderriots": "Dacoity/Robbery/Murder/Riots",
+        "quarrellinghooliganism": "Quarrelling/Hooliganism",
+        "passengerfallendown": "Passenger fallen down",
+        "nuisancebypassenger": "Nuisance by passenger",
+        "misbehaviour": "Misbehaviour",
+        "others": "Others",
+        "divyangjanfacilities": "Divyangjan Facilities",
+        "divyangjancoachunavailability": "Divyangjan coach unavailability",
+        "divyangjantoiletwashbasin": "Divyangjan toilet /washbasin",
+        "braillesignageincoach": "Braille signage in coach",
+        "facilitiesforwomenwithspecialneeds": "Facilities for Women with Special needs",
+        "babyfood": "Baby Food",
+        "electricalequipment": "Electrical Equipment",
+        "airconditioner": "Air Conditioner",
+        "fans": "Fans",
+        "lights": "Lights",
+        "chargingpoints": "Charging Points",
+        "coachcleanliness": "Coach-Cleanliness",
+        "toilet": "Toilet",
+        "washbasin": "Washbasin",
+        "cockroachrodents": "Cockroach / Rodents",
+        "coachinterior": "Coach Interior",
+        "coachexterior": "Coach Exterior",
+        "punctuality": "Punctuality",
+        "ntesapp": "NTES APP",
+        "laterunning": "Late Running",
+        "wateravailability": "Water Availability",
+        "packagesdrinkingwaterrailneer": "Packages Drinking Water / Rail Neer",
+        "coachmaintenance": "Coach - Maintenance",
+        "windowseatbroken": "Window/Seat Broken",
+        "windowdoorlockingproblem": "Window/Door locking problem",
+        "tapleakingtapnotworking": "Tap leaking/Tap not working",
+        "brokenmissingtoiletfittings": "Broken/Missing Toilet Fittings",
+        "jerksabnormalsound": "Jerks/Abnormal Sound",
+        "cateringvendingservices": "Catering & Vending Services",
+        "overcharging": "Overcharging",
+        "servicequalityhygiene": "Service Quality & Hygiene",
+        "foodqualityquantity": "Food Quality & Quantity",
+        "ecatering": "E-Catering",
+        "foodwaternotavailable": "Food & Water Not Available",
+        "staffbehaviour": "Staff Behaviour",
+        "corruptionbribery": "Corruption/ Bribery",
+        "bedroll": "Bed Roll",
+        "dirtytorn": "Dirty / Torn",
+        "nonavailability": "Non Availability",
+        "miscellaneous": "Miscellaneous"
+    };
+
+    const severityScores = {
+        "Coach Maintenance": 2,
+        "Catering & Vending Services": 2,
+        "Staff Behaviour": 2,
+        "Corruption/ Bribery": 2,
+        "Bed Roll": 2,
+        "Miscellaneous": 1,
+        "Medical Assistance": 3,
+        "Security": 3,
+        "Divyangjan Facilities": 2,
+        "Facilities for Women with Special needs": 2,
+        "Electrical Equipment": 2,
+        "Coach Cleanliness": 2,
+        "Punctuality": 1,
+        "Water Availability": 2
+      };
+      
 
     function generateTicketId(baseId) {
         // Generate a random 4-digit number
@@ -34,12 +99,8 @@ export const createComplaint= async (req, res) => {
         return uniqueTicketId;
       }
       
-      // Usage example
-      
-      // Example usage
     let ticketid=generateTicketId(1234567321)
 
-    
     const PNR=req.body.pnrNo
     const PNRLink=req.body.pnrLink 
     const Phone=req.body.mobileNo
@@ -71,17 +132,20 @@ export const createComplaint= async (req, res) => {
                 op["image"].push(file)
             }
             else if(file.toLowerCase().indexOf("video") !== -1){
-                op["video"].push(file)
+                
+                if(file.toLowerCase().includes("mp3")||file.toLowerCase().includes("wav")){
+                     op["audio"].push(file)
+                    }
+                else {op["video"].push(file)}
             }
-            else{
-                op["audio"].push(file)
-            }
+           
         }
         return op;
     }
 
     function sanitizeString(input) {
-        return input.toLowerCase().replace(/[\s\-\_\$\&]/g, '');
+        let tex=input.toLowerCase().replaceAll(/[\s\-\_\$\&]/g, '');
+        return tex.replaceAll("/","")
     }
 
     if(!PNR && PNRLink){
@@ -91,7 +155,6 @@ export const createComplaint= async (req, res) => {
     if(!PNR){
         return res.status(422).json({"message":"PNR NOT FOUND"})
     }
-
 
     if(loggedin){
         user = await User.findOne({_id:req.user._id});
@@ -113,15 +176,16 @@ export const createComplaint= async (req, res) => {
         }) 
     }
 
-    let category=""
-    let subCategory=""
+    let category="security"
+    let subCategory="Unauthorized person in Ladies/Disabled 03/1 Comp Coach/SLR/Reserve Coach"
     let severity=0
 
     let linkObj=generatelinks(complaintMedia)
     let complaint_data = {
         "text": `${complaintDesc}`,
         "image_urls": linkObj['image'],
-        "video_urls": linkObj['video']
+        "video_urls": linkObj['video'],
+        "audio_urls": linkObj['audio']
     }
     let resp=""
     // try{
@@ -129,7 +193,7 @@ export const createComplaint= async (req, res) => {
     //     console.log(resp.data)
     //     category=resp.data.category;
     //     subCategory=resp.data.subcategory;
-    //     severity=resp.data.severity
+    //     severity=severityScore(category)
     //     // console.log(category);
     // }
     // catch(err){
@@ -184,19 +248,21 @@ export const createComplaint= async (req, res) => {
             {trainDepartureDate:dataFromPnr.trainDepartureDate},
             {station:station}
         ]})
-        // let defa=await
         // console.log(dataFromPnr)
         // console.log(dataFromTrain)
         // return res.status(200)
-        // let employeeId=dataFromTrain.category[category][subCategory]
-        // await Complaints.findOneAndUpdate(
-        //     { complaintId: currentId }, 
-        //     { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
-        // // console.log("done3")
-        // const emp=await employeeData.findOne({employeeId:employeeId})
-        // console.log(emp);
-        // emp.complaints.push(currentId)
-        // emp.save()
+        console.log(dataFromTrain.category[category][subCategory])
+        console.log(subCategory)
+        let employeeId=dataFromTrain.category[category][subCategory]
+        console.log(employeeId)
+        await Complaints.findOneAndUpdate(
+            { complaintId: currentId }, 
+            { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
+        // console.log("done3")
+        const emp=await employeeData.findOne({employeeId:employeeId})
+        console.log(emp);
+        emp.complaints.push(currentId)
+        emp.save()
         const options = {
             expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
              //only manipulate by server not by client/user
@@ -209,7 +275,7 @@ export const createComplaint= async (req, res) => {
             });
         
         if(loggedin){
-            return res.status(200).json({ message: 'Complaint Registered Succesfully',complaintId:currentId,category:category,subCategory:subCategory});
+            return res.status(200).json({ message: 'Complaint Registered Succesfully',complaintId:currentId,category:categoryMap[category],subCategory:categoryMap[subCategory]});
 
         }
         return res.cookie("acessToken", token,options).status(200).json({ message: 'Complaint Registered Succesfully',complaintId:currentId,category:category,subCategory:subCategory});
@@ -233,3 +299,72 @@ export const createComplaint= async (req, res) => {
     }
         
 };
+export const updateComplaint=async (req,res)=>{
+
+    const severityScores = {
+        "Coach Maintenance": 2,
+        "Catering & Vending Services": 2,
+        "Staff Behaviour": 2,
+        "Corruption/ Bribery": 2,
+        "Bed Roll": 2,
+        "Miscellaneous": 1,
+        "Medical Assistance": 3,
+        "Security": 3,
+        "Divyangjan Facilities": 2,
+        "Facilities for Women with Special needs": 2,
+        "Electrical Equipment": 2,
+        "Coach Cleanliness": 2,
+        "Punctuality": 1,
+        "Water Availability": 2
+      };
+
+    function sanitizeString(input) {
+        let tex=input.toLowerCase().replaceAll(/[\s\-\_\$\&]/g, '');
+        return tex.replaceAll("/","")
+    }
+
+    const {complaintId,categoryFromUser,subCategoryFromUser}=req.body
+    if (!req.loggedin){
+        return res.status(404).json({message:"Unauthorized"})
+    }
+    let category=sanitizeString(categoryFromUser)
+    let subCategory=sanitizeString(subCategoryFromUser)
+
+    try{
+        let temp = await Complaints.find({complaintId})
+        console.log(temp)
+        let working=temp[0].employeeWorking
+        console.log(working)
+        let emp= await employeeData.findOne({employeeId:working})
+        emp.complaints=emp.complaints.filter(item => item !== complaintId)
+        const dataFromPnr=await pnrData.findOne({pnrNumber:temp[0].pnr})
+        let resp= await trainstatus.findOne({train_code:dataFromPnr.trainCode})
+        if(!resp){
+        resp=await trainstatus.find()
+        return res.status(500).json(resp)
+         }
+        let station =resp.stations[Math.floor(Math.random() * resp.stations.length)]
+        
+        let dataFromTrain=await trainData.findOne({$and:[
+            {trainCode:dataFromPnr.trainCode},
+            {trainDepartureDate:dataFromPnr.trainDepartureDate},
+            {station:station}
+        ]})
+        let employeeId=dataFromTrain.category[category][subCategory]
+        let severity=severityScores[category]
+        await Complaints.findOneAndUpdate(
+            { complaintId: complaintId }, 
+            { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
+        const emp1=await employeeData.findOne({employeeId:employeeId})
+        // console.log(emp);
+        emp1.complaints.push(complaintId)
+        emp1.save()
+        res.status(200).json({"message":"successfully changed"})
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({"message":"unsuccessfully changed"})
+    }
+    
+
+}
