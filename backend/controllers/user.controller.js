@@ -221,17 +221,72 @@ export const getUser = async (req, res) => {
         // for(let poi of arr){
         //     await trainstatus.create(poi)
         // }
-        let obj={
-            pnrNumber:"1233",
-            trainCode:"12986",
-            trainName:"Jaipur Double Decker",
-            trainDepartureDate:new Date(2024, 10, 30, 0, 0, 0, 0),
-            passangers:[{"name":"Mihir Bairathi","gender":"M","age":"19"},{"name":"Arshaan Parvez","gender":"M","age":"19"}]
-        }
-        // await pnrData.create(obj)
-        let re =await pnrData.find()
-        let r2= await trainData.find()
-        await complaints.deleteMany()
+        const hashed =await bcryptjs.hash("password",10)
+        await employee.deleteMany()
+
+        let obj3={
+                employeeId:"E001",
+                name:"Ramesh Kumar",
+                age:29,
+                password:hashed,
+                designation:"DEMO EMP 1" ,
+                phone:"987456987",
+                complaints:[]   
+            }
+            let obj4={
+                employeeId:"E002",
+                name:"Hemant Dubey",
+                age:35,
+                password:hashed,
+                designation:"DEMO EMP 2" ,
+                phone:"74554345667",
+                complaints:[]   
+            }
+            let obj5={
+                employeeId:"E003",
+                name:"pankaj jha",
+                age:32,
+                password:hashed,
+                designation:"DEMO EMP 3" ,
+                phone:"83334464462",
+                complaints:[]   
+            }
+            let obj6={
+                employeeId:"E004",
+                name:"Maneesh Meena",
+                age:25,
+                password:hashed,
+                designation:"DEMO EMP 4" ,
+                phone:"9087456987",
+                complaints:[]   
+            }
+            let obj7={
+                employeeId:"E005",
+                name:"Rakesh Pandey",
+                age:30,
+                password:hashed,
+                designation:"DEMO EMP 5" ,
+                phone:"887456987",
+                complaints:[]   
+            }
+        // const pdata=new employeeData(obj3)
+        // await pdata.save()
+        // const adata=new pnrData(obj)
+        // adata.save()
+        // const bdata= new trainData(obj2)
+        // bdata.save()
+        let dat=new employee(obj3)
+        await dat.save()
+        let dat1=new employee(obj4)
+        await dat1.save()
+        let dat2=new employee(obj5)
+        await dat2.save()
+        let dat3=new employee(obj6)
+        await dat3.save()
+        let dat4=new employee(obj7)
+        await dat4.save()
+
+        let re = await employee.find()
         res.status(200).json(re)
     }
 

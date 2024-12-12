@@ -65,9 +65,9 @@ export const getEmp = async (req, res) => {
 export const loginEmp = async(req,res)=>{
         try {
             // console.log(req.body);
-            const { phone ,password }=req.body;
+            const { employeeId ,password }=req.body;
             
-            const user = await employee.findOne({phone});
+            const user = await employee.findOne({employeeId});
             if(!user ){
                 return res.status(400).json({message:"Invalid user credentials"})   
             }

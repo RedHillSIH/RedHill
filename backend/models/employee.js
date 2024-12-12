@@ -6,6 +6,7 @@ const employeeSchema = new mongoose.Schema({
     age:Number,
     designation:String ,
     phone:String,
+    password:String,
     complaints:[Number]   
 });
 export default mongoose.model('employeeData', employeeSchema);
