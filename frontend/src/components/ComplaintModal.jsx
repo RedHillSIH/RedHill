@@ -23,22 +23,38 @@ const ComplaintModal = ({ complaint, onClose }) => {
         </button>
         <h2 className="text-xl font-bold mb-4">Complaint Details</h2>
         <p className="mb-2">
-          <strong>ID:</strong> {complaint.id}
+          <strong>ID:</strong> {complaint.complaintId}
+        </p>
+        <p className="mb-4">
+          <strong>Name</strong> {complaint.name}
+        </p>
+        <p className="mb-4">
+          <strong>Phone:</strong> {complaint.phone}
         </p>
         <p className="mb-2">
-          <strong>Seat:</strong> {complaint.seat}
+          <strong>Train No:</strong> {complaint.trainCode}
         </p>
         <p className="mb-2">
-          <strong>Issue:</strong> {complaint.issueType}
+          <strong>Train name:</strong> {complaint.trainName}
+        </p>
+        <p className="mb-2 items-center">
+          <h2 className="font-bold">Media:</h2>
+          <img className="h-36 w-36 mx-auto " src={complaint.media}></img>
         </p>
         <p className="mb-2">
           <strong>Severity:</strong> {complaint.severity}
         </p>
         <p className="mb-2">
-          <strong>Status:</strong> {complaint.status}
+          <strong>Category:</strong> {complaint.category}
+        </p>
+        <p className="mb h-fit flex overflow-y-scroll">
+          <strong>SubCategory:</strong> {complaint.subCategory}
         </p>
         <p className="mb-4">
-          <strong>Date:</strong> {complaint.date}
+          <strong>Description:</strong> {complaint.description}
+        </p>
+        <p className="mb-4">
+          <strong>Date:</strong> {complaint.createdAt}
         </p>
 
         {/* OTP Section */}

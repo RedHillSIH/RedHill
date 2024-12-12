@@ -188,17 +188,17 @@ export const createComplaint= async (req, res) => {
         "audio_urls": linkObj['audio']
     }
     let resp=""
-    // try{
-    //     resp= await axios.post("http://172.16.9.161:8010/classify_complaint/",complaint_data)
-    //     console.log(resp.data)
-    //     category=resp.data.category;
-    //     subCategory=resp.data.subcategory;
-    //     severity=severityScore(category)
-    //     // console.log(category);
-    // }
-    // catch(err){
-    //     console.log(err);
-    // }
+    try{
+        resp= await axios.post("http://172.16.9.161:9017/classify_complaint/",complaint_data)
+        console.log(resp.data)
+        category=resp.data.category;
+        subCategory=resp.data.subcategory;
+        severity=severityScore(category)
+        // console.log(category);
+    }
+    catch(err){
+        console.log(err);
+    }
 
 
    const dataFromPnr=await pnrData.findOne({pnrNumber:PNR})
@@ -318,17 +318,18 @@ export const updateComplaint=async (req,res)=>{
         "Water Availability": 2
       };
 
-    function sanitizeString(input) {
-        let tex=input.toLowerCase().replaceAll(/[\s\-\_\$\&]/g, '');
-        return tex.replaceAll("/","")
-    }
+    // function sanitizeString(input) {
+    //     let tex=input.toLowerCase().replaceAll(/[\s\-\_\$\&]/g, '');
+    //     return tex.replaceAll("/","")
+    // }
 
     const {complaintId,categoryFromUser,subCategoryFromUser}=req.body
+    // console.log(req.body);
     if (!req.loggedin){
         return res.status(404).json({message:"Unauthorized"})
     }
-    let category=sanitizeString(categoryFromUser)
-    let subCategory=sanitizeString(subCategoryFromUser)
+    let category=categoryFromUser
+    let subCategory=subCategoryFromUser
 
     try{
         let temp = await Complaints.find({complaintId})
@@ -350,15 +351,15 @@ export const updateComplaint=async (req,res)=>{
             {trainDepartureDate:dataFromPnr.trainDepartureDate},
             {station:station}
         ]})
-        let employeeId=dataFromTrain.category[category][subCategory]
+        // let employeeId=dataFromTrain.category[category][subCategory]
         let severity=severityScores[category]
         await Complaints.findOneAndUpdate(
-            { complaintId: complaintId }, 
-            { $set: { category: category,subCategory:subCategory,employeeWorking:employeeId,severity:severity } })
-        const emp1=await employeeData.findOne({employeeId:employeeId})
+            { complaintId:complaintId }, 
+            { $set: { category: category,subCategory:subCategory,severity:severity } })
+        // const emp1=await employeeData.findOne({employeeId:employeeId})
         // console.log(emp);
-        emp1.complaints.push(complaintId)
-        emp1.save()
+        // emp1.complaints.push(complaintId)
+        // emp1.save()
         res.status(200).json({"message":"successfully changed"})
     }
     catch(err){

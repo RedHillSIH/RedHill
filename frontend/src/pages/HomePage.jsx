@@ -12,6 +12,7 @@ import { Send, Image, Paperclip, Mic, X } from 'lucide-react';
 // logo- https://railmadad.indianrailways.gov.in/madad/final/images/logog20.png
 // bg- https://railmadad.indianrailways.gov.in/madad/final/images/body-bg.jpg
 
+let currcomp={};
 
 function HomePage() {
   const [isRecording, setIsRecording] = useState(false);
@@ -22,21 +23,20 @@ function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("currcomp.category" || "");
   const [selectedSubCategory, setSelectedSubCategory] = useState("currcomp.subCategory" || "");
   const [compreg, setcompreg] = useState(false);
+  // const [currcomp,setcurrcomp] = useState(
+  //   {
+  //     complaintId: "123456465129",
+  //     // seat: "B2 26",
+  //     category: "Coach-Cleanliness",
+  //     severity: "Low",
+  //     subCategory: "Toilet",
+  //     mobileNo:"123",
+  //     pnrNo:"123",
 
-  const [currcomp,setcurrcomp] = useState(
-    {
-      complaintId: "123456465129",
-      // seat: "B2 26",
-      category: "Coach-Cleanliness",
-      severity: "Low",
-      subCategory: "Toilet",
-      mobileNo:"123",
-      pnrNo:"123",
 
-
-    }
+  //   }
    
-  );
+  // );
 
   const startRecording = async () => {
     try {
@@ -109,13 +109,24 @@ function HomePage() {
   };
 
 
-  const handleUpdate = () => {
+  const handleUpdate = async() => {
     // Call the update function (replace with actual PUT API logic)
-    const onUpdateCategory={
+    // complaintId,categoryFromUser,subCategoryFromUser
+     const onUpdateCategory={
       "complaintId":currcomp.complaintId,
       "category": selectedCategory,
       "subCategory": selectedSubCategory
     };
+    // console.log(currcomp.category);
+    try {
+      const resp = await axios.put(`${import.meta.env.VITE_API_URL}comp/update`,onUpdateCategory,{withCredentials:true}) 
+      if(resp.data){
+        console.log(resp.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+   
     alert("Category and Subcategory updated successfully!");
   };
 
@@ -334,40 +345,40 @@ function HomePage() {
 
 
     const handleSubmit = async (e) => {
-      console.log(audioPreview)
+      // console.log(audioPreview)
       e.preventDefault(); // Prevent the default form submission
-      try {
-        // Fetch the blob data from the Blob URL
-        const responseAudio= await fetch(audioPreview);
-        const blob = await responseAudio.blob();
-        const fileAudio = new File([blob], "userAudio", { type: blob.type });
-        console.log(fileAudio); // The File object
-        const formDataAudio = new FormData();
-          formDataAudio.append('file', fileAudio);
-          formDataAudio.append('upload_preset', import.meta.env.VITE_APP_UPLOAD_PRESET);
-          try {
-            const responseAudio = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_APP_CLOUD_NAME}/auto/upload`, {
-                method: 'POST',
-                body: formDataAudio,
-            });
+//       try {
+//         // Fetch the blob data from the Blob URL
+//         const responseAudio= await fetch(audioPreview);
+//         const blob = await responseAudio.blob();
+//         const fileAudio = new File([blob], "userAudio", { type: blob.type });
+//         console.log(fileAudio); // The File object
+//         const formDataAudio = new FormData();
+//           formDataAudio.append('file', fileAudio);
+//           formDataAudio.append('upload_preset', import.meta.env.VITE_APP_UPLOAD_PRESET);
+//           try {
+//             const responseAudio = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_APP_CLOUD_NAME}/auto/upload`, {
+//                 method: 'POST',
+//                 body: formDataAudio,
+//             });
 
-            const responseDataAudio = await responseAudio.json();
+//             const responseDataAudio = await responseAudio.json();
 
-            if (responseAudio.ok) {
-                // Add the uploaded image's URL to the output array
-                let myAudioUrl=responseDataAudio.secure_url;
-                console.log(myAudioUrl)
-            } else {
-                console.error(`Error uploading file: ${responseDataAudio.error.message}`);
-            }
-        } catch (error) {
-            console.error(`Network error: ${error.message}`);
-        }
+//             if (responseAudio.ok) {
+//                 // Add the uploaded image's URL to the output array
+//                 let myAudioUrl=responseDataAudio.secure_url;
+//                 console.log(myAudioUrl)
+//             } else {
+//                 console.error(`Error uploading file: ${responseDataAudio.error.message}`);
+//             }
+//         } catch (error) {
+//             console.error(`Network error: ${error.message}`);
+//         }
 
-    } catch (error) {
-        console.error("Error creating file from Blob URL:", error);
-    }
-      return;
+//     } catch (error) {
+//         console.error("Error creating file from Blob URL:", error);
+//     }
+//       return;
       if (formData.otp !== otpGenerated) {
         alert("Invalid OTP. Please try again.");
         return;
@@ -390,11 +401,16 @@ function HomePage() {
         .then((res) => {
           console.log(res.data);
           if (res.data) {
-             alert('Complaint Registered');
-             console.log(res.data);
-             setSelectedOption("currComp")
-             setComplaints(res.data)
+            //  console.log(res.data);
+            alert('Complaint Registered');
+
+             currcomp = res.data;
+            //  setComplaints(res.data)
+            //  console.log({currcomp,hello:"yolo"});
              setcompreg(true);
+             setSelectedOption("currComp")
+
+
             // navigate('/');
           }
         })
@@ -505,7 +521,7 @@ function HomePage() {
 </button> */}
 <div className="col-span-2 flex justify-end space-x-4">
    {/* Voice Input Section */}
-   <div className=" flex-col col-span-1">
+   {/* <div className=" flex-col col-span-1">
           <label className="text-gray-700 font-medium">Voice Input</label>
           <div className="flex items-center space-x-2">
             <button
@@ -537,7 +553,7 @@ function HomePage() {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 <button
   type="reset"
   className="bg-[#75002b] text-white px-4 py-2 rounded-md hover:bg-red-700"
@@ -567,37 +583,51 @@ function HomePage() {
           );
         case "currComp":
           return (
-            <div className="shadow-md w-full p-4 rounded-md border mt-4">
+            <div className="shadow-md w-full p-1 rounded-md border mt-1 ">
       <h1 className="text-2xl font-bold text-[#75002b] mt-2 mb-4">Complaint Details</h1>
-      <p className=' text-green-700 mx-2 my-2'>Your complaint has been filed with the following details. In case of any error kindly update.</p>
+      <p className=' text-green-700 mx-2 my-2'>Your complaint has been filed with the following details.</p>
       <div className="grid grid-cols-2 gap-4">
         {/* Complaint ID */}
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-medium">Complaint ID</label>
-          <p className="border p-2 rounded-md bg-gray-100">{currcomp.complaintId}</p>
+        <div className="flex flex-row">
+          <div className="font-bold ">ComplaintID: <span className="">{currcomp.complaintId}</span></div>
+        </div>
+        <div className="flex flex-row">
+          <div className="font-bold">Mobile No.: <span className="">{formData.mobileNo}</span></div>
+        </div>
+        <div className="flex flex-row">
+          <div className="font-bold">Media <img className='w-44 h-44' src={formData.files[0]}></img> </div>
+          <img></img>
+        </div>
+        <div className="flex flex-row">
+          <div className="font-bold text-green-600">Current Category: <span className="">{currcomp.category}</span></div>
+        </div>
+        <div className="flex flex-row">
+          <div className="font-bold text-green-600">Current Subcategory: <span className="">{currcomp.subCategory}</span></div>
         </div>
 
         {/* Mobile Number */}
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <label className="text-gray-700 font-medium">Mobile No.</label>
           <p className="border p-2 rounded-md bg-gray-100">{currcomp.mobileNo}</p>
-        </div>
+        </div> */}
 
         {/* PNR Number */}
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <label className="text-gray-700 font-medium">PNR No.</label>
           <p className="border p-2 rounded-md bg-gray-100">{currcomp.pnrNo} </p>
-        </div>
+        </div> */}
 
         {/* Grievance Description */}
         <div className="col-span-2 flex flex-col">
-          <label className="text-gray-700 font-medium">Grievance Description</label>
-          <p className="border p-2 rounded-md bg-gray-100">{currcomp.grievanceDescription}</p>
-        </div>
+          {/* <label className="text-gray-700 font-medium">Grievance Description</label>
+          <p className="border p-2 rounded-md bg-gray-100">{currcomp.grievanceDescription}</p> */}
+          <p className='text-gray-900 mx-2 my-2'>In case of error kindly update</p>
 
+        </div>
                 {/* Category Dropdown */}
+                
                 <div className="flex flex-col">
-          <label className="text-gray-700 font-medium">Category</label>
+          <label className="text-gray-700 font-medium">New Category</label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
@@ -614,7 +644,7 @@ function HomePage() {
 
         {/* Sub-Category Dropdown */}
         <div className="flex flex-col">
-          <label className="text-gray-700 font-medium">Sub-Category</label>
+          <label className="text-gray-700 font-medium">New Sub-Category</label>
           <select
             value={selectedSubCategory}
             onChange={(e) => setSelectedSubCategory(e.target.value)}

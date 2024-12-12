@@ -12,6 +12,7 @@ const ChatWidget = () => {
   const [mediaPreview, setMediaPreview] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [conversationId, setConversationId] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -40,7 +41,10 @@ const ChatWidget = () => {
       );
 
       const data = await response.json();
-      return data.secure_url;
+      return {
+        url: data.secure_url,
+        resourceType: data.resource_type
+      };
     } catch (error) {
       console.error("Error uploading to Cloudinary:", error);
       throw error;
@@ -52,22 +56,28 @@ const ChatWidget = () => {
     if (!file) return;
 
     try {
+      // Create local preview
       if (file.type.startsWith("image/")) {
         const reader = new FileReader();
         reader.onload = (e) => {
           setMediaPreview({
             type: "image",
-            url: e.target.result,
-            file: file,
+            localUrl: e.target.result,
+            file: file
           });
         };
         reader.readAsDataURL(file);
-      } else {
+      } else if (file.type.startsWith("video/")) {
         setMediaPreview({
-          type: "file",
+          type: "video",
           name: file.name,
-          size: file.size,
-          file: file,
+          file: file
+        });
+      } else if (file.type.startsWith("audio/")) {
+        setMediaPreview({
+          type: "audio",
+          name: file.name,
+          file: file
         });
       }
     } catch (error) {
@@ -86,14 +96,12 @@ const ChatWidget = () => {
         audioChunksRef.current.push(event.data);
       };
 
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/wav",
-        });
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
         setMediaPreview({
           type: "audio",
-          url: URL.createObjectURL(audioBlob),
-          file: audioBlob,
+          localUrl: URL.createObjectURL(audioBlob),
+          file: new File([audioBlob], "recording.wav", { type: "audio/wav" })
         });
       };
 
@@ -119,96 +127,122 @@ const ChatWidget = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!inputMessage.trim() && !mediaPreview) return;
+  e.preventDefault();
+  if (!inputMessage.trim() && !mediaPreview) return;
 
-    let cloudinaryUrl = null;
+  setIsLoading(true);
+  let cloudinaryUrl = null;
+
+  try {
+    // Upload media to Cloudinary if present
     if (mediaPreview) {
-      try {
-        cloudinaryUrl = await uploadToCloudinary(mediaPreview.file);
-      } catch (error) {
-        console.error("Error uploading media:", error);
-        return;
-      }
+      const uploadResult = await uploadToCloudinary(mediaPreview.file);
+      cloudinaryUrl = uploadResult.url;  // Store the Cloudinary URL
     }
 
+    // Add user message to chat with local preview
     const newUserMessage = {
       role: "user",
       content: inputMessage.trim(),
-      media: cloudinaryUrl
-        ? {
-            type: mediaPreview.type,
-            url: cloudinaryUrl,
-            name: mediaPreview.name,
-          }
-        : null,
+      media: mediaPreview ? {
+        type: mediaPreview.type,
+        url: mediaPreview.localUrl || null,
+        cloudinaryUrl: cloudinaryUrl // Attach Cloudinary URL here
+      } : null,
     };
 
-    setMessages((prev) => [...prev, newUserMessage]);
+    setMessages(prev => [...prev, newUserMessage]);
+
+    // Send to bot with Cloudinary URL (for image/video/audio sharing)
+    const response = await fetch("http://172.16.9.161:8056/chat/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_message: cloudinaryUrl || inputMessage.trim(), // Send Cloudinary URL if available or text message
+        conversation_id: conversationId
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (!conversationId && data.conversation_id) {
+      setConversationId(data.conversation_id);
+    }
+    
+    const assistantMessage = {
+      role: "assistant",
+      content: data.assistant_response, // Adjust to response from the assistant
+    };
+
+    // {
+    //   data.pnr,
+    //   data.category,
+    //   data.subcategory,
+    //   data.severity,
+    //   cloudinaryUrl
+
+    // }
+
+    setMessages(prev => [...prev, assistantMessage]);
     setInputMessage("");
     setMediaPreview(null);
-    setIsLoading(true);
 
-    try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: inputMessage.trim(),
-          mediaUrl: cloudinaryUrl,
-        }),
-      });
-
-      const data = await response.json();
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data.response,
-          media: data.media,
-        },
-      ]);
-    } catch (error) {
-      console.error("Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, I encountered an error. Please try again.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    setMessages(prev => [...prev, {
+      role: "assistant",
+      content: "Sorry, I encountered an error. Please try again."
+    }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const renderMessageContent = (message) => {
     return (
       <div className="space-y-2">
-        {message.content && <div>{message.content}</div>}
+        <div>{message.content}</div>
+        
         {message.media && (
           <div className="mt-2">
             {message.media.type === "image" && (
               <img
-                src={message.media.url}
+                src={message.media.cloudinaryUrl || message.media.url}
                 alt="Shared image"
                 className="max-w-full rounded-lg max-h-48 object-contain"
               />
             )}
-            {message.media.type === "file" && (
-              <div className="flex items-center space-x-2 p-2 bg-gray-100 rounded">
-                <Paperclip className="w-4 h-4" />
-                <span className="text-sm">{message.media.name}</span>
-              </div>
+            {message.media.type === "video" && (
+              <video controls className="max-w-full rounded-lg max-h-48">
+                <source src={message.media.cloudinaryUrl || message.media.url} type="video/mp4" />
+                Your browser does not support the video element.
+              </video>
             )}
             {message.media.type === "audio" && (
               <audio controls className="w-full">
-                <source src={message.media.url} type="audio/wav" />
+                <source src={message.media.cloudinaryUrl || message.media.url} type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
+            )}
+          </div>
+        )}
+
+        {message.complaintDetails && (
+          <div className="mt-4 p-3 bg-green-50 rounded-lg text-sm">
+            <div className="font-semibold">Complaint Registered!</div>
+            <div>Complaint ID: {message.complaintDetails.complaintId}</div>
+            {message.complaintDetails.pnr && (
+              <div>PNR: {message.complaintDetails.pnr}</div>
+            )}
+            {message.complaintDetails.details && (
+              <div className="mt-2">
+                <div className="font-medium">Details:</div>
+                <ul className="list-disc ml-4">
+                  {Object.entries(message.complaintDetails.details).map(([key, value]) => (
+                    <li key={key}>{key}: {value}</li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         )}
@@ -216,25 +250,15 @@ const ChatWidget = () => {
     );
   };
 
-  // Add this new function to handle incoming messages
-  const handleNewMessage = (message) => {
-    setMessages(prev => [...prev, message]);
-    if (!isExpanded) {
-      setUnreadCount(prev => prev + 1);
-    }
-  };
-
-  // Modify the return statement to include collapse/expand functionality
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {!isExpanded ? (
-        // Collapsed state - show floating button with unread count
         <button
           onClick={() => {
             setIsExpanded(true);
             setUnreadCount(0);
           }}
-          className="bg-[#800000] text-white p-4 rounded-full shadow-lg hover:bg-[#600000] transition-all duration-300 relative"
+          className="bg-[#5E0022] text-white p-4 rounded-full shadow-lg hover:bg-[#600000] transition-all duration-300 relative"
         >
           <MessageCircle className="w-6 h-6" />
           {unreadCount > 0 && (
@@ -244,10 +268,8 @@ const ChatWidget = () => {
           )}
         </button>
       ) : (
-        // Expanded state - show full chat widget
-        <div className="w-96 h-[500px] bg-white rounded-lg shadow-xl flex flex-col animate-slide-up">
-          {/* Header */}
-          <div className="p-4 bg-[#800000] text-white rounded-t-lg flex justify-between items-center">
+        <div className="w-96 h-[500px] bg-white rounded-lg shadow-xl flex flex-col">
+          <div className="p-4 bg-[#5E0022] text-white rounded-t-lg flex justify-between items-center">
             <h3 className="text-lg font-semibold">Railmadad Assistant</h3>
             <button 
               onClick={() => setIsExpanded(false)}
@@ -257,19 +279,16 @@ const ChatWidget = () => {
             </button>
           </div>
 
-          {/* Messages Container */}
           <div className="flex-1 p-4 overflow-y-auto">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`mb-4 ${
-                  message.role === 'user' ? 'text-right' : 'text-left'
-                }`}
+                className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}
               >
                 <div
                   className={`inline-block p-3 rounded-lg ${
                     message.role === 'user'
-                      ? 'bg-[#800000] text-white'
+                      ? 'bg-[#5E0022] text-white'
                       : 'bg-gray-100 text-gray-800'
                   }`}
                 >
@@ -291,18 +310,17 @@ const ChatWidget = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Media Preview */}
           {mediaPreview && (
             <div className="px-4 py-2 border-t">
               <div className="relative inline-block">
                 {mediaPreview.type === 'image' && (
                   <img 
-                    src={mediaPreview.url} 
+                    src={mediaPreview.localUrl} 
                     alt="Preview" 
                     className="h-20 w-auto rounded"
                   />
                 )}
-                {mediaPreview.type === 'file' && (
+                {mediaPreview.type === 'video' && (
                   <div className="flex items-center space-x-2 p-2 bg-gray-100 rounded">
                     <Paperclip className="w-4 h-4" />
                     <span className="text-sm">{mediaPreview.name}</span>
@@ -310,7 +328,7 @@ const ChatWidget = () => {
                 )}
                 {mediaPreview.type === 'audio' && (
                   <audio controls className="h-10">
-                    <source src={mediaPreview.url} type="audio/wav" />
+                    <source src={mediaPreview.localUrl} type="audio/wav" />
                   </audio>
                 )}
                 <button
@@ -323,27 +341,26 @@ const ChatWidget = () => {
             </div>
           )}
 
-          {/* Input Form */}
           <form onSubmit={handleSubmit} className="p-4 border-t">
             <div className="flex space-x-2">
               <input
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 p-2 border rounded-lg focus:outline-none focus:border-[#800000]"
+                placeholder="Type your complaint or message..."
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:border-[#5E0022]"
               />
               <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
                 className="hidden"
-                accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                accept="image/*,video/*,audio/*"
               />
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="p-2 text-[#800000] rounded-lg hover:bg-red-50"
+                className="p-2 text-[#5E0022] rounded-lg hover:bg-red-50"
               >
                 <Image className="w-5 h-5" />
               </button>
@@ -353,7 +370,7 @@ const ChatWidget = () => {
                 className={`p-2 rounded-lg ${
                   isRecording 
                     ? 'text-red-600 hover:bg-red-50' 
-                    : 'text-[#800000] hover:bg-red-50'
+                    : 'text-[#5E0022] hover:bg-red-50'
                 }`}
               >
                 <Mic className="w-5 h-5" />
@@ -361,7 +378,7 @@ const ChatWidget = () => {
               <button
                 type="submit"
                 disabled={isLoading || (!inputMessage.trim() && !mediaPreview)}
-                className="p-2 bg-[#800000] text-white rounded-lg hover:bg-[#600000] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="p-2 bg-[#5E0022] text-white rounded-lg hover:bg-[#600000] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -372,23 +389,5 @@ const ChatWidget = () => {
     </div>
   );
 };
-
-// Add these styles to your CSS
-const styles = `
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
-}
-`;
 
 export default ChatWidget;

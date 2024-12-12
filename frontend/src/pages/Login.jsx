@@ -21,7 +21,7 @@ function Login() {
     console.log(userInfo);
     const api=import.meta.env.VITE_API_URL;
     await axios
-      .post(`${api}user/login`, body=userInfo, { withCredentials: true })
+      .post(`${api}user/login`, userInfo, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         if (res.data) {

@@ -8,6 +8,9 @@ import axios from "axios";
 
 function Complaints() {
     const navigate = useNavigate();
+    const[name,setname]=useState();
+    const[id,setid]=useState();
+
     const [isLogged, setIsLogged] = useState(false);
     const [complaints, setComplaints] = useState([]);
     const [selectedComplaint, setSelectedComplaint] = useState(null);
@@ -25,6 +28,10 @@ function Complaints() {
                     navigate("/login");
                 } else {
                     setIsLogged(true);
+                    setname(res.data.user.name);
+                    setid(res.data.user.employeeId)
+                    // console.log(user);
+                   
                 }
             } catch (error) {
                 console.error("Authentication check failed:", error);
@@ -74,11 +81,15 @@ function Complaints() {
         <div className="h-screen">
             <Navbar islogged={isLogged} />
             <div className="flex h-screen bg-gray-100">
-                <Sidebar selected="Complaints" />
+                {/* <Sidebar selected="Complaints" /> */}
                 
                 <div className="flex-1 flex flex-col">
-                    <header className="bg-white shadow p-4">
-                        <h1 className="text-2xl font-bold">Complaints</h1>
+                    <header className="bg-white flex justify-between shadow p-4">
+                        <h1 className="text-2xl text-red-700 font-bold">Complaints</h1>
+                        <h1 className="text-2xl font-bold">{name}</h1>
+                        <h1 className="text-2xl font-bold text-blue-500">Id:{id}</h1>
+
+
                     </header>
                     
                     <main className="flex-1 p-6 overflow-y-auto">
